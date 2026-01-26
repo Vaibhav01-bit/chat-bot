@@ -32,36 +32,44 @@ export const Login = () => {
 
     return (
         <AuthLayout>
-            <div className="text-center mb-8">
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Welcome Back</h1>
-                <p className="text-gray-500 dark:text-gray-400 mt-2">Sign in to continue to ChatMate</p>
+            <div className="text-center mb-8 animate-fade-in">
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Welcome Back</h1>
+                <p className="text-gray-500 dark:text-gray-400 mt-2 text-sm z-10">Sign in to continue to ChatMate</p>
             </div>
 
-            <form onSubmit={handleLogin} className="space-y-6">
-                <Input
-                    label="Email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    placeholder="you@example.com"
-                />
-                <Input
-                    label="Password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    placeholder="••••••••"
-                />
+            <form onSubmit={handleLogin} className="space-y-5 animate-slide-up delay-100">
+                <div className="space-y-4">
+                    <Input
+                        label="Email"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        placeholder="you@example.com"
+                        className="bg-zinc-50 dark:bg-zinc-900/50"
+                    />
+                    <Input
+                        label="Password"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        placeholder="••••••••"
+                        className="bg-zinc-50 dark:bg-zinc-900/50"
+                    />
+                </div>
 
-                {error && <div className="text-red-500 text-sm text-center bg-red-50 dark:bg-red-900/20 p-3 rounded-lg border border-red-100 dark:border-red-900">{error}</div>}
+                {error && (
+                    <div className="text-red-500 text-sm text-center bg-red-50 dark:bg-red-900/20 p-3 rounded-xl border border-red-100 dark:border-red-900/50 animate-scale-in">
+                        {error}
+                    </div>
+                )}
 
-                <Button type="submit" className="w-full" isLoading={loading}>
+                <Button type="submit" className="w-full py-3 text-[15px] font-semibold shadow-blue-500/20 active:scale-[0.98]" isLoading={loading}>
                     Sign In
                 </Button>
 
-                <p className="text-center text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-center text-sm text-gray-600 dark:text-gray-400 pt-2">
                     Don't have an account?{' '}
                     <Link to="/signup" className="font-semibold text-blue-600 hover:text-blue-500 transition-colors">
                         Sign up

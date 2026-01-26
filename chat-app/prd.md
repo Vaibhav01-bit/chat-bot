@@ -1334,6 +1334,102 @@ Total Users Over Time
   - IP address
 - Retention: 90 days
 
+### 6.8.7 Admin Route Structure
+
+**Base Path:** `/admin`
+
+**Frontend Routes:**
+- `/admin/login` - Dedicated login page (no registration)
+- `/admin/dashboard` - Main overview with metrics
+- `/admin/users` - User management list
+    - `/admin/users/:id` - User details & actions
+- `/admin/conversations` - (Future) Encrypted chat logs oversight
+- `/admin/analytics` - Deep dive reporting
+- `/admin/statuses` - Global status feed moderation
+- `/admin/settings` - Platform configuration
+- `/admin/reports` - Abuse ticket management
+
+**Routing Logic:**
+- **Protection:** All `/admin/*` routes (except login) require a valid `admin_token` stored in secure HttpOnly cookie.
+- **Unauthorized:** Redirect immediately to `/admin/login`.
+- **Role Guard:** Routes check `admin.role` capability before rendering.
+- **Separation:** Admin UI serves a separate bundle/layout from the main app to minimize payload size for regular users.
+
+### 6.8.8 Admin Roles & Authorization Levels
+
+**Role Hierarchy:**
+
+1.  **Super Admin**
+    - **Access:** Full system access.
+    - **Unique Capabilities:** Manage other admins, view financial/sensitive analytics, hard delete data, change system-wide settings.
+    - **Restriction:** None.
+
+2.  **Moderator**
+    - **Access:** User management, content moderation, reports.
+    - **Capabilities:** Suspend users, delete statuses, resolve reports, view basic user info.
+    - **Restriction:** Cannot access server settings, cannot delete admins, cannot view raw database logs.
+
+3.  **Analyst**
+    - **Access:** Analytics dashboard only.
+    - **Capabilities:** Read-only access to metrics, export reports.
+    - **Restriction:** No write access, no PII access (user names/emails masked).
+
+**Implementation:**
+- Stored in `admins` table: `role VARCHAR DEFAULT 'moderator'`.
+- Enforced at API level (RLS) and Client level (React Router restrictions).
+
+### 6.8.9 Admin Security & RLS (Technical)
+
+**Policy Architecture:**
+Admin data and User data are strictly separated. Admin privileges do **not** use the public `auth.uid()`.
+
+**Row Level Security (RLS) Strategy:**
+
+- **Admins Table:**
+    - `SELECT`: Only self.
+    - `INSERT/UPDATE`: Only Super Admin.
+
+- **User Data Access (for Admins):**
+    - Policies must explicitly check `auth.jwt().role === 'service_role'` OR a distinct admin auth context.
+    - *Note:* Often better to use Supabase Service Role Key in Edge Functions for admin actions to bypass User RLS, rather than complicating User RLS policies.
+
+**Privilege Protection:**
+- **Separate Auth:** Admins use a distinct auth table/provider or flagged accounts in `auth.users` with specific metadata claims.
+- **Session Timeout:** Short-lived tokens (15m access, 12h refresh).
+- **Audit Logging:** Database triggers log EVERY change made by an admin ID to `admin_activity_logs`.
+
+### 6.8.10 Admin UI & UX Principles
+
+**Design Philosophy:** "Density & Utility over Aesthetics"
+
+**Guidelines:**
+- **Data-Dense:** Use tables with sortable headers, compact rows, and pagination. Avoid large whitespace.
+- **Performance:** No complex entrance animations. usage of standard browser elements for speed.
+- **Visual Distinction:**
+    - Use a distinct specific navbar color (e.g., Dark Slate) to differentiate from the user app.
+    - "Admin Mode" badge always visible.
+- **Destructive Actions:**
+    - Require **double confirmation** (Modal + "Type DELETE to confirm").
+    - "Undo" toast for soft-actions (e.g., suspending status).
+- **Navigation:** Sidebar navigation for quick context switching. Keyboard shortcuts for common actions (`/` to search users).
+
+### 6.8.11 Admin Reports & Abuse Management (Future)
+
+**System Overview:**
+Centralized queue for handling user-flagged content (spam, harassment, inappropriate content).
+
+**Report Lifecycle:**
+1.  **Open:** New report received.
+2.  **Investigating:** Admin/Moderator opens the ticket.
+3.  **Actioned:** Moderation action taken (Suspend/Delete/Warn).
+4.  **Dismissed:** False alarm or insufficient evidence.
+
+**Dashboard Features:**
+- **Priority Queue:** Reports sorted by severity (e.g., "Violent Threat" > "Spam").
+- **Evidence Context:** Snapshot of the reported content (message/status) at the time of reporting.
+- **Trust Score Impact:** Validated reports lower a user's internal "Trust Score," affecting their visibility or random chat matching priority.
+- **Ban Appeal:** Interface for reviewing user appeals against bans.
+
 ---
 
 ## 7. User Flows & Journey Maps

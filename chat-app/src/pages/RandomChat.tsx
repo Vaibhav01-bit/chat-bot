@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, Send, X, RefreshCw, AlertCircle } from 'lucide-react'
+import { ArrowLeft, Send, RefreshCw, AlertCircle, UserPlus, UserCheck, Shield, SkipForward } from 'lucide-react'
 import { supabase } from '../services/supabaseClient'
 import { useAuth } from '../context/AuthContext'
 import { MessageBubble } from '../components/MessageBubble'
@@ -15,10 +15,15 @@ export const RandomChat = () => {
     // Session Data
     const [sessionId, setSessionId] = useState<string | null>(null)
     const [partnerId, setPartnerId] = useState<string | null>(null)
+    const [partnerProfile, setPartnerProfile] = useState<any>(null)
     const [messages, setMessages] = useState<any[]>([])
     const [input, setInput] = useState('')
     const [timeLeft, setTimeLeft] = useState(60) // Queue timeout
     const [endReason, setEndReason] = useState<string>('')
+
+    // Social State
+    const [friendStatus, setFriendStatus] = useState<'none' | 'pending' | 'received' | 'accepted'>('none')
+    const [isPartnerBlocked, setIsPartnerBlocked] = useState(false)
 
     const bottomRef = useRef<HTMLDivElement>(null)
     const queueChannelRef = useRef<any>(null)
@@ -53,6 +58,9 @@ export const RandomChat = () => {
         setMessages([])
         setSessionId(null)
         setPartnerId(null)
+        setPartnerProfile(null)
+        setFriendStatus('none')
+        setIsPartnerBlocked(false)
         setTimeLeft(60)
 
         // Polling loop for match check
@@ -143,17 +151,56 @@ export const RandomChat = () => {
         }
     }
 
-    const handleMatchFound = (sid: string, pid: string) => {
+    const handleMatchFound = async (sid: string, pid: string) => {
         cleanupSubscriptions()
         setSessionId(sid)
         setPartnerId(pid)
         setStatus('connected')
+
+        // Fetch Partner Details
+        try {
+            const { data } = await supabase.from('profiles').select('username, avatar_url').eq('id', pid).single()
+            if (data) setPartnerProfile(data)
+
+            // Check Friend Status
+            checkFriendStatus(pid)
+        } catch (e) {
+            console.error('Error fetching partner:', e)
+        }
+
         subscribeToSession(sid)
+    }
+
+    const checkFriendStatus = async (pid: string) => {
+        if (!user) return
+
+        // Check if already friends
+        const { data: friends } = await supabase
+            .from('friends')
+            .select('*')
+            .or(`and(user1_id.eq.${user.id},user2_id.eq.${pid}),and(user1_id.eq.${pid},user2_id.eq.${user.id})`)
+
+        if (friends && friends.length > 0) {
+            setFriendStatus('accepted')
+            return
+        }
+
+        // Check requests
+        const { data: requests } = await supabase
+            .from('friend_requests')
+            .select('*')
+            .or(`and(sender_id.eq.${user.id},receiver_id.eq.${pid}),and(sender_id.eq.${pid},receiver_id.eq.${user.id})`)
+            .eq('status', 'pending')
+            .single()
+
+        if (requests) {
+            setFriendStatus(requests.sender_id === user.id ? 'pending' : 'received')
+        }
     }
 
     // 3. CONNECTED SESSION
     const subscribeToSession = async (sid: string) => {
-        // 1. Initial Fetch (Important for history!)
+        // 1. Initial Fetch
         await fetchMessages(sid)
 
         // 2. Realtime
@@ -253,18 +300,164 @@ export const RandomChat = () => {
         }
     }
 
-    const handleDisconnect = async () => {
-        if (!confirm("Are you sure you want to disconnect?")) return
-        if (!sessionId) return
-
-        await supabase.from('random_chat_sessions').update({
-            status: 'ended',
-            ended_by: user?.id,
-            ended_at: new Date().toISOString()
-        }).eq('id', sessionId)
+    const handleDisconnect = async (reason = 'You disconnected') => {
+        if (status === 'connected' && sessionId) {
+            await supabase.from('random_chat_sessions').update({
+                status: 'ended',
+                ended_by: user?.id,
+                ended_at: new Date().toISOString()
+            }).eq('id', sessionId)
+        }
 
         setStatus('ended')
-        setEndReason('You disconnected')
+        setEndReason(reason)
+    }
+
+    // --- SOCIAL HANDLERS ---
+
+    const handleAddFriend = async () => {
+        if (!user || !partnerId) return
+
+        // 1. Send Request
+        if (friendStatus === 'none') {
+            setFriendStatus('pending') // Optimistic
+            const { error } = await supabase.from('friend_requests').insert({
+                sender_id: user.id,
+                receiver_id: partnerId
+            })
+            if (error) {
+                console.error('Friend req fail:', error)
+                setFriendStatus('none')
+            }
+        }
+        // 2. Accept Request
+        else if (friendStatus === 'received') {
+            setFriendStatus('accepted') // Optimistic
+
+            try {
+                // Step 1: Create Friendship
+                await supabase.from('friends').insert({ user1_id: user.id, user2_id: partnerId })
+
+                // Step 2: Update Request status
+                await supabase.from('friend_requests').update({ status: 'accepted' })
+                    .or(`and(sender_id.eq.${user.id},receiver_id.eq.${partnerId}),and(sender_id.eq.${partnerId},receiver_id.eq.${user.id})`)
+
+                // Step 3: Create Permanent Chat
+                // Check if chat already exists
+                const { data: existingChat } = await supabase
+                    .from('chats')
+                    .select('id')
+                    .or(`and(user1_id.eq.${user.id},user2_id.eq.${partnerId}),and(user1_id.eq.${partnerId},user2_id.eq.${user.id})`)
+                    .eq('is_group', false)
+                    .single()
+
+                if (!existingChat) {
+                    // Create new permanent chat
+                    const { data: newChat, error: chatError } = await supabase
+                        .from('chats')
+                        .insert({
+                            user1_id: user.id,
+                            user2_id: partnerId,
+                            is_group: false
+                        })
+                        .select()
+                        .single()
+
+                    if (chatError) {
+                        console.error('Error creating permanent chat:', chatError)
+                    } else {
+                        console.log('✅ Permanent chat created:', newChat.id)
+
+                        // Add both users to chat_participants
+                        const { error: participantsError } = await supabase
+                            .from('chat_participants')
+                            .insert([
+                                { chat_id: newChat.id, user_id: user.id },
+                                { chat_id: newChat.id, user_id: partnerId }
+                            ])
+
+                        if (participantsError) {
+                            console.error('Error adding chat participants:', participantsError)
+                        } else {
+                            console.log('✅ Chat participants added')
+                        }
+
+                        // Show success message
+                        alert(`You're now friends with @${partnerProfile?.username}! This chat will appear in your Chats list.`)
+                    }
+                } else {
+                    console.log('✅ Chat already exists:', existingChat.id)
+                    alert(`You're now friends with @${partnerProfile?.username}!`)
+                }
+            } catch (error) {
+                console.error('Error in friend acceptance flow:', error)
+                setFriendStatus('received') // Rollback optimistic update
+            }
+        }
+    }
+
+    const handleBlockUser = async () => {
+        if (!confirm("Block this user? You won't see them again.")) return
+        if (!user || !partnerId) return
+
+        setIsPartnerBlocked(true)
+
+        // 1. Block in DB
+        await supabase.from('blocked_users').insert({
+            blocker_id: user.id,
+            blocked_id: partnerId
+        })
+
+        // 2. Disconnect immediately
+        handleDisconnect("You blocked this user.")
+    }
+
+    const handleSkip = async () => {
+        if (!user || !partnerId) return
+
+        try {
+            // 1. Check rate limit
+            const { data: rateLimit } = await supabase
+                .from('skip_rate_limits')
+                .select('*')
+                .eq('user_id', user.id)
+                .single()
+
+            if (rateLimit && rateLimit.skip_count >= 5 && new Date(rateLimit.reset_at) > new Date()) {
+                alert('Too many skips. Please wait before skipping again.')
+                return
+            }
+
+            // 2. Record skip
+            await supabase
+                .from('random_chat_skips')
+                .insert({ skipper_id: user.id, skipped_id: partnerId })
+
+            // 3. Update rate limit
+            if (rateLimit) {
+                await supabase
+                    .from('skip_rate_limits')
+                    .update({
+                        skip_count: rateLimit.skip_count + 1,
+                        last_skip_at: new Date().toISOString()
+                    })
+                    .eq('user_id', user.id)
+            } else {
+                await supabase
+                    .from('skip_rate_limits')
+                    .insert({
+                        user_id: user.id,
+                        skip_count: 1,
+                        last_skip_at: new Date().toISOString(),
+                        reset_at: new Date(Date.now() + 3600000).toISOString() // 1 hour
+                    })
+            }
+
+            // 4. End session
+            handleDisconnect('You skipped this user')
+        } catch (error) {
+            console.error('Skip error:', error)
+        }
     }
 
     useEffect(() => {
@@ -274,22 +467,90 @@ export const RandomChat = () => {
     return (
         <div className="flex flex-col h-screen bg-zinc-50 dark:bg-black">
             {/* Header */}
-            <div className="p-4 bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
-                <div className="flex items-center">
-                    <button onClick={() => { leaveQueue(); navigate(-1); }} className="mr-3 text-zinc-600 dark:text-zinc-400">
-                        <ArrowLeft />
-                    </button>
-                    <div>
-                        <h1 className="font-bold text-lg dark:text-white">Random Chat</h1>
-                        {status === 'connected' && <span className="text-xs text-green-500">● Connected</span>}
+            {status === 'connected' && partnerProfile ? (
+                // MATCHED HEADER
+                <div className="p-4 bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between animate-slide-up">
+                    <div className="flex items-center space-x-3">
+                        <button onClick={() => confirm('Leave chat?') && handleDisconnect()} className="text-zinc-500 mr-2">
+                            <ArrowLeft size={20} />
+                        </button>
+                        <div className="w-10 h-10 rounded-full bg-zinc-200 dark:bg-zinc-800 overflow-hidden">
+                            {partnerProfile.avatar_url ? (
+                                <img src={partnerProfile.avatar_url} alt="" className="w-full h-full object-cover" />
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center text-zinc-500 font-bold">
+                                    {partnerProfile.username?.[0]?.toUpperCase()}
+                                </div>
+                            )}
+                        </div>
+                        <div>
+                            <div className="font-bold text-zinc-900 dark:text-white">@{partnerProfile.username}</div>
+                            <div className="text-xs text-green-500 flex items-center"><span className="w-1.5 h-1.5 bg-green-500 rounded-full mr-1"></span> Live</div>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                        {/* Friend Action Button */}
+                        {friendStatus !== 'accepted' && (
+                            <button
+                                onClick={handleAddFriend}
+                                disabled={friendStatus === 'pending'}
+                                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all flex items-center ${friendStatus === 'pending'
+                                    ? 'bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500'
+                                    : friendStatus === 'received'
+                                        ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-500/20'
+                                        : 'bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-400'
+                                    }`}
+                            >
+                                {friendStatus === 'pending' && <span>Requested</span>}
+                                {friendStatus === 'received' && <span>Accept</span>}
+                                {friendStatus === 'none' && (
+                                    <>
+                                        <UserPlus size={16} className="mr-1.5" />
+                                        Add Friend
+                                    </>
+                                )}
+                            </button>
+                        )}
+                        {friendStatus === 'accepted' && (
+                            <div className="px-3 py-1.5 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-full text-sm font-medium flex items-center">
+                                <UserCheck size={16} className="mr-1.5" />
+                                Friends
+                            </div>
+                        )}
+
+                        {/* Skip Button */}
+                        <button
+                            onClick={handleSkip}
+                            className="p-2 text-zinc-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-full transition-colors"
+                            title="Skip User"
+                        >
+                            <SkipForward size={18} />
+                        </button>
+
+                        {/* Block Button */}
+                        <button
+                            onClick={handleBlockUser}
+                            className="p-2 text-zinc-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full transition-colors"
+                            title="Block User"
+                        >
+                            <Shield size={18} />
+                        </button>
                     </div>
                 </div>
-                {status === 'connected' && (
-                    <button onClick={handleDisconnect} className="p-2 bg-red-100 text-red-600 rounded-full hover:bg-red-200">
-                        <X size={20} />
-                    </button>
-                )}
-            </div>
+            ) : (
+                // DEFAULT HEADER
+                <div className="p-4 bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
+                    <div className="flex items-center">
+                        <button onClick={() => { leaveQueue(); navigate(-1); }} className="mr-3 text-zinc-600 dark:text-zinc-400">
+                            <ArrowLeft />
+                        </button>
+                        <div>
+                            <h1 className="font-bold text-lg dark:text-white">Random Chat</h1>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Content */}
             <div className="flex-1 overflow-y-auto p-4 flex flex-col items-center justify-center relative">
@@ -337,18 +598,25 @@ export const RandomChat = () => {
 
                 {/* ENDED */}
                 {status === 'ended' && (
-                    <div className="text-center bg-white dark:bg-zinc-900 p-8 rounded-3xl shadow-xl max-w-sm w-full border border-zinc-100 dark:border-zinc-800">
+                    <div className="text-center bg-white dark:bg-zinc-900 p-8 rounded-3xl shadow-xl max-w-sm w-full border border-zinc-100 dark:border-zinc-800 animate-scale-in">
                         <div className="w-16 h-16 bg-zinc-100 dark:bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-4">
                             <AlertCircle size={32} className="text-zinc-500" />
                         </div>
                         <h2 className="text-xl font-bold mb-2 dark:text-white">Chat Ended</h2>
                         <p className="text-zinc-500 mb-6">{endReason || 'Session disconnected'}</p>
-                        <button
-                            onClick={startSearch}
-                            className="w-full bg-blue-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-700 transition-all mb-3"
-                        >
-                            Find New Partner
-                        </button>
+
+                        {isPartnerBlocked ? (
+                            <div className="text-red-500 font-medium mb-4 flex items-center justify-center">
+                                <Shield size={16} className="mr-2" /> User Blocked
+                            </div>
+                        ) : (
+                            <button
+                                onClick={startSearch}
+                                className="w-full bg-blue-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-700 transition-all mb-3"
+                            >
+                                Find New Partner
+                            </button>
+                        )}
                         <button
                             onClick={() => navigate('/search')}
                             className="w-full bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 px-6 py-3 rounded-xl font-medium hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all"

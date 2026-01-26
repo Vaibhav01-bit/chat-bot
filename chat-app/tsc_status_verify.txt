@@ -1,0 +1,1 @@
+src/pages/Status.tsx(3,23): error TS6133: 'Eye' is declared but its value is never read.

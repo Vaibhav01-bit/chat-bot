@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { X } from 'lucide-react'
 import { supabase } from '../services/supabaseClient'
+import { StatusReactions } from '../components/StatusReactions'
 
 export const StatusView = () => {
     const { userId } = useParams<{ userId: string }>()
@@ -72,7 +73,7 @@ export const StatusView = () => {
                     <div key={idx} className="h-1 flex-1 bg-white/30 rounded-full overflow-hidden">
                         <div
                             className={`h-full bg-white transition-all duration-300 ${idx < currentIndex ? 'w-full' : idx === currentIndex ? 'w-full animate-progress' : 'w-0'}`}
-                            style={{ transitionDuration: idx === currentIndex ? '5000ms' : '0ms' }} // Simple CSS animation approximation
+                            style={{ transitionDuration: idx === currentIndex ? '5000ms' : '0ms' }}
                         />
                     </div>
                 ))}
@@ -95,17 +96,23 @@ export const StatusView = () => {
             </div>
 
             {/* Content */}
-            <div className="flex-1 flex items-center justify-center relative bg-zinc-900" onClick={handleNext}>
+            <div className="flex-1 flex items-center justify-center relative bg-zinc-900">
                 <img src={currentStatus.media_url} className="max-h-full max-w-full object-contain" />
                 {currentStatus.content && (
-                    <div className="absolute bottom-10 left-0 right-0 p-4 text-center bg-gradient-to-t from-black/80 to-transparent pt-20">
+                    <div className="absolute bottom-32 left-0 right-0 p-4 text-center bg-gradient-to-t from-black/80 to-transparent pt-20">
                         <p className="text-white text-lg font-medium">{currentStatus.content}</p>
                     </div>
                 )}
             </div>
 
+            {/* Status Reactions */}
+            <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black via-black/95 to-transparent z-20">
+                <StatusReactions statusId={currentStatus.id} statusOwnerId={currentStatus.user_id} />
+            </div>
+
             {/* Navigation Areas (invisible) */}
             <div className="absolute inset-y-0 left-0 w-1/4 z-10" onClick={(e) => { e.stopPropagation(); handlePrev(); }} />
+            <div className="absolute inset-y-0 right-0 w-1/4 z-10" onClick={(e) => { e.stopPropagation(); handleNext(); }} />
         </div>
     )
 }

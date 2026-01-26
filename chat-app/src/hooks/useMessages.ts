@@ -88,16 +88,17 @@ export function useMessages(chatId: string) {
         }
     }, [chatId, user])
 
-    const sendMessage = async (content: string) => {
+    const sendMessage = async (content: string, type: 'text' | 'image' = 'text', imageUrl?: string) => {
         if (!user || !chatId) return
 
-        console.log('🚀 Attempting to send message:', { chatId, senderId: user.id, content, type: 'text' })
+        console.log('🚀 Attempting to send message:', { chatId, senderId: user.id, content, type })
 
         const { data, error } = await supabase.from('messages').insert({
             chat_id: chatId,
             sender_id: user.id,
-            content,
-            message_type: 'text'
+            content: content,
+            message_type: type,
+            image_url: imageUrl
         }).select().single()
 
         if (error) {

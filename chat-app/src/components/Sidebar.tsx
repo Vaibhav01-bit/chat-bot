@@ -15,7 +15,7 @@ export function Sidebar() {
     ]
 
     return (
-        <div className="hidden md:flex flex-col w-64 fixed inset-y-0 left-0 bg-white dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 z-50">
+        <div className="hidden md:flex flex-col w-64 fixed inset-y-0 left-0 bg-white dark:bg-[var(--sidebar)] border-r border-zinc-200 dark:border-zinc-800 z-50">
             <div className="p-6">
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">ChatMate</h1>
             </div>
@@ -28,14 +28,30 @@ export function Sidebar() {
                             key={path}
                             to={path}
                             className={twMerge(
-                                "flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200",
+                                "group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 relative overflow-hidden",
                                 isActive
-                                    ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-500 font-medium"
-                                    : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white"
+                                    ? "text-blue-500 font-medium"
+                                    : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50/50 dark:hover:bg-zinc-800/50"
                             )}
                         >
-                            <Icon size={20} strokeWidth={isActive ? 2.5 : 2} />
-                            <span>{label}</span>
+                            {/* Active Background Pill */}
+                            <div className={twMerge(
+                                "absolute inset-0 bg-blue-50 dark:bg-blue-500/10 transition-opacity duration-300",
+                                isActive ? "opacity-100" : "opacity-0"
+                            )} />
+
+                            {/* Active Glow */}
+                            {isActive && (
+                                <div className="absolute left-0 w-1 h-8 bg-blue-500 rounded-r-full shadow-[0_0_12px_rgba(59,130,246,0.5)]" />
+                            )}
+
+                            <div className={twMerge(
+                                "relative z-10 p-1 rounded-lg transition-all duration-300",
+                                isActive ? "scale-110" : "group-hover:scale-105"
+                            )}>
+                                <Icon size={20} strokeWidth={isActive ? 2.5 : 2} />
+                            </div>
+                            <span className="relative z-10">{label}</span>
                         </Link>
                     )
                 })}

@@ -55,12 +55,12 @@ export const Signup = () => {
 
     return (
         <AuthLayout>
-            <div className="text-center mb-8">
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Create Account</h1>
-                <p className="text-gray-500 dark:text-gray-400 mt-2">Join ChatMate today</p>
+            <div className="text-center mb-8 animate-fade-in">
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Create Account</h1>
+                <p className="text-gray-500 dark:text-gray-400 mt-2 text-sm z-10">Join ChatMate today</p>
             </div>
 
-            <form onSubmit={handleSignup} className="space-y-4">
+            <form onSubmit={handleSignup} className="space-y-5 animate-slide-up delay-100">
                 <Input
                     label="Full Name"
                     name="fullName"
@@ -68,6 +68,7 @@ export const Signup = () => {
                     onChange={handleChange}
                     required
                     placeholder="John Doe"
+                    className="bg-zinc-50 dark:bg-zinc-900/50"
                 />
                 <Input
                     label="Email"
@@ -77,6 +78,7 @@ export const Signup = () => {
                     onChange={handleChange}
                     required
                     placeholder="you@example.com"
+                    className="bg-zinc-50 dark:bg-zinc-900/50"
                 />
 
                 <div className="grid grid-cols-2 gap-4">
@@ -87,6 +89,7 @@ export const Signup = () => {
                         value={formData.dob}
                         onChange={handleChange}
                         required
+                        className="bg-zinc-50 dark:bg-zinc-900/50"
                     />
                     <div className="w-full">
                         <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">
@@ -96,7 +99,7 @@ export const Signup = () => {
                             name="gender"
                             value={formData.gender}
                             onChange={handleChange}
-                            className="block w-full rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 py-2.5 text-zinc-900 dark:text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 sm:text-sm transition-all duration-200"
+                            className="block w-full rounded-xl border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/50 px-4 py-2.5 text-zinc-900 dark:text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 sm:text-sm transition-all duration-200"
                         >
                             <option value="male">Male</option>
                             <option value="female">Female</option>
@@ -114,6 +117,7 @@ export const Signup = () => {
                     onChange={handleChange}
                     required
                     placeholder="••••••••"
+                    className="bg-zinc-50 dark:bg-zinc-900/50"
                 />
                 <Input
                     label="Confirm Password"
@@ -123,15 +127,20 @@ export const Signup = () => {
                     onChange={handleChange}
                     required
                     placeholder="••••••••"
+                    className="bg-zinc-50 dark:bg-zinc-900/50"
                 />
 
-                {error && <div className="text-red-500 text-sm text-center bg-red-50 dark:bg-red-900/20 p-3 rounded-lg border border-red-100 dark:border-red-900">{error}</div>}
+                {error && (
+                    <div className="text-red-500 text-sm text-center bg-red-50 dark:bg-red-900/20 p-3 rounded-xl border border-red-100 dark:border-red-900/50 animate-scale-in">
+                        {error}
+                    </div>
+                )}
 
-                <Button type="submit" className="w-full mt-2" isLoading={loading}>
+                <Button type="submit" className="w-full mt-2 py-3 text-[15px] font-semibold active:scale-[0.98]" isLoading={loading}>
                     Sign Up
                 </Button>
 
-                <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
+                <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-4 pt-2">
                     Already have an account?{' '}
                     <Link to="/login" className="font-semibold text-blue-600 hover:text-blue-500 transition-colors">
                         Sign in

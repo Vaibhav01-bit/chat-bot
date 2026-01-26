@@ -7,6 +7,18 @@
     <title>chat-app</title>
   </head>
   <body>
+    <script>
+      (function() {
+        try {
+          const storedTheme = localStorage.getItem('theme');
+          const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          const theme = (storedTheme === 'light' || storedTheme === 'dark') ? storedTheme : systemTheme;
+          
+          document.documentElement.classList.remove('light', 'dark');
+          document.documentElement.classList.add(theme);
+        } catch (e) {}
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

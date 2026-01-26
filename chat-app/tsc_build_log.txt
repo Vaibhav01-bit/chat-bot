@@ -1,0 +1,2 @@
+src/context/AuthContext.tsx(1,63): error TS6133: 'ReactNode' is declared but its value is never read.
+src/services/friendService.ts(12,15): error TS6133: 'existing' is declared but its value is never read.
