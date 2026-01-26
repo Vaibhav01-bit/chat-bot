@@ -58,44 +58,44 @@ export const StatusPost = () => {
 
     if (!preview) {
         return (
-            <div className="flex flex-col h-screen bg-black text-white items-center justify-center p-4">
+            <div className="flex flex-col h-[100dvh] bg-black text-white items-center justify-center p-4">
                 <div className="text-center">
                     <h2 className="text-xl font-bold mb-4">Select an image</h2>
-                    <label className="bg-blue-600 px-6 py-3 rounded-xl cursor-pointer hover:bg-blue-700 transition">
+                    <label className="bg-blue-600 px-6 py-3 rounded-xl cursor-pointer hover:bg-blue-700 transition active:scale-95">
                         Choose from Gallery
                         <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
                     </label>
-                    <button onClick={() => navigate(-1)} className="block mt-8 text-zinc-500 hover:text-white">Cancel</button>
+                    <button onClick={() => navigate(-1)} className="block mt-8 text-zinc-500 hover:text-white px-4 py-2">Cancel</button>
                 </div>
             </div>
         )
     }
 
     return (
-        <div className="flex flex-col h-screen bg-black">
-            <div className="flex-1 relative flex items-center justify-center bg-zinc-900">
+        <div className="flex flex-col h-[100dvh] bg-black">
+            <div className="flex-1 relative flex items-center justify-center bg-zinc-900 overflow-hidden pt-[env(safe-area-inset-top)]">
                 <img src={preview} className="max-h-full max-w-full object-contain" />
                 <button
                     onClick={() => { setFile(null); setPreview(null); }}
-                    className="absolute top-4 left-4 p-2 bg-black/50 rounded-full text-white"
+                    className="absolute top-4 left-4 p-2 bg-black/50 rounded-full text-white backdrop-blur-sm mt-[env(safe-area-inset-top)]"
                 >
                     <X />
                 </button>
             </div>
 
-            <div className="p-4 bg-zinc-900 border-t border-zinc-800">
+            <div className="p-4 bg-zinc-900 border-t border-zinc-800 pb-[calc(1rem+env(safe-area-inset-bottom))]">
                 <div className="flex items-end gap-2">
                     <textarea
                         value={caption}
                         onChange={e => setCaption(e.target.value)}
                         placeholder="Add a caption..."
-                        className="flex-1 bg-zinc-800 text-white rounded-xl p-3 resize-none focus:outline-none min-h-[50px] max-h-[100px]"
+                        className="flex-1 bg-zinc-800 text-white rounded-xl p-3 resize-none focus:outline-none min-h-[50px] max-h-[100px] text-[15px]"
                         rows={2}
                     />
                     <Button
                         onClick={handlePost}
                         isLoading={loading}
-                        className="rounded-full w-12 h-12 flex items-center justify-center p-0 flex-shrink-0 bg-blue-600 hover:bg-blue-700"
+                        className="rounded-full w-12 h-12 flex items-center justify-center p-0 flex-shrink-0 bg-blue-600 hover:bg-blue-700 active:scale-95 transition-all"
                     >
                         <Check />
                     </Button>

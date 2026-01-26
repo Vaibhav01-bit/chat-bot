@@ -79,28 +79,34 @@ export const Chat = () => {
     }
 
     return (
-        <div className="flex flex-col h-full bg-zinc-50 dark:bg-black">
+        <div className="flex flex-col h-[100dvh] bg-zinc-50 dark:bg-black">
             {/* Header */}
-            <div className="bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 p-3 flex items-center sticky top-0 z-20">
-                <button onClick={() => navigate(-1)} className="p-2 mr-2 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full">
-                    <ArrowLeft size={20} />
+            <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 p-3 flex items-center sticky top-0 z-30 pt-[calc(0.75rem+env(safe-area-inset-top))] transition-all duration-200">
+                <button
+                    onClick={() => navigate(-1)}
+                    className="p-2.5 mr-2 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full active:scale-95 transition-all"
+                >
+                    <ArrowLeft size={22} />
                 </button>
-                <div className="flex items-center">
-                    <div className="w-10 h-10 rounded-full bg-zinc-200 dark:bg-zinc-700 overflow-hidden mr-3">
+                <div className="flex items-center flex-1 cursor-pointer hover:opacity-80 transition-opacity">
+                    <div className="w-10 h-10 rounded-full bg-zinc-200 dark:bg-zinc-700 overflow-hidden mr-3 border border-zinc-100 dark:border-zinc-700">
                         {partner?.avatar_url && <img src={partner.avatar_url} className="w-full h-full object-cover" />}
                     </div>
                     <div>
-                        <h2 className="font-semibold text-zinc-900 dark:text-white text-sm">
+                        <h2 className="font-semibold text-zinc-900 dark:text-white text-base leading-tight">
                             {partner?.full_name || 'Loading...'}
                         </h2>
-                        <p className="text-xs text-green-500 font-medium">Online</p>
+                        <div className="flex items-center space-x-1.5">
+                            <span className="w-2 h-2 bg-green-500 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.4)] animate-pulse"></span>
+                            <p className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">Online</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                {loading && <div className="text-center text-zinc-500 text-sm mt-4">Loading messages...</div>}
+            <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 scroll-smooth">
+                {loading && <div className="text-center text-zinc-500 text-sm mt-4 animate-pulse">Loading messages...</div>}
                 {messages.map(msg => (
                     <MessageBubble
                         key={msg.id}
@@ -109,17 +115,17 @@ export const Chat = () => {
                         time={new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     />
                 ))}
-                <div ref={bottomRef} />
+                <div ref={bottomRef} className="h-2" />
             </div>
 
             {/* Input */}
-            <form onSubmit={handleSend} className="p-3 bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 flex items-center space-x-2 sticky bottom-0 z-20 pb-safe">
-                <button type="button" className="p-2 text-zinc-500 hover:text-blue-600 transition-colors">
-                    <Paperclip size={20} />
+            <form onSubmit={handleSend} className="p-3 bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 flex items-end space-x-2 sticky bottom-0 z-30 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.05)]">
+                <button type="button" className="p-3 text-zinc-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors active:scale-95 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800">
+                    <Paperclip size={22} />
                 </button>
-                <div className="flex-1">
+                <div className="flex-1 min-h-[44px] bg-zinc-100 dark:bg-zinc-800/80 rounded-[20px] focus-within:ring-2 focus-within:ring-blue-500/50 focus-within:bg-white dark:focus-within:bg-zinc-800 transition-all duration-200">
                     <input
-                        className="w-full bg-zinc-100 dark:bg-zinc-800 border-transparent rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-zinc-900 dark:text-white placeholder-zinc-500"
+                        className="w-full h-full bg-transparent border-transparent px-4 py-2.5 text-[15px] focus:outline-none text-zinc-900 dark:text-white placeholder-zinc-500"
                         placeholder="Type a message..."
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
@@ -128,9 +134,9 @@ export const Chat = () => {
                 <button
                     type="submit"
                     disabled={!newMessage.trim()}
-                    className="p-2.5 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-md shadow-blue-500/30"
+                    className="p-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform active:scale-90 shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/30"
                 >
-                    <Send size={18} />
+                    <Send size={20} className={newMessage.trim() ? "translate-x-0.5" : ""} />
                 </button>
             </form>
         </div>
