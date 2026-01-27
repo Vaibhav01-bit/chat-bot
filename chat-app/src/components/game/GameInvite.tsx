@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { Play, Check } from 'lucide-react'
+import { Play } from 'lucide-react'
 
 interface GameInviteProps {
     isMe: boolean
@@ -28,8 +28,8 @@ export const GameInvite: React.FC<GameInviteProps> = ({ isMe, onAccept, status =
                 <button
                     onClick={onAccept}
                     className={`w-full py-2 text-sm font-medium rounded-lg hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 ${isMe
-                            ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300'
-                            : 'bg-zinc-900 dark:bg-white text-white dark:text-zinc-900'
+                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300'
+                        : 'bg-zinc-900 dark:bg-white text-white dark:text-zinc-900'
                         }`}
                 >
                     <Play size={14} className="fill-current" />

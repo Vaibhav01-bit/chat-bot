@@ -1,10 +1,8 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { Shield, Lock, Eye, EyeOff } from 'lucide-react'
 import { supabase } from '../../services/supabaseClient'
 
 export const AdminLogin = () => {
-    const navigate = useNavigate()
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
