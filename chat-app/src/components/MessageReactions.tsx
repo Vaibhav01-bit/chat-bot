@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { twMerge } from 'tailwind-merge'
 import { supabase } from '../services/supabaseClient'
 import { useAuth } from '../context/AuthContext'
 
@@ -128,17 +129,15 @@ export const MessageReactions = ({ messageId, showPicker = false, onClose }: Mes
             {showPicker && (
                 <div
                     ref={pickerRef}
-                    className="absolute -top-14 left-0 bg-white dark:bg-zinc-800 rounded-full shadow-xl border border-zinc-200 dark:border-zinc-700 p-2 flex space-x-1 animate-scale-in z-20"
+                    className="absolute -top-14 left-0 glass-panel rounded-full p-1.5 flex space-x-1 animate-scale-in z-20 shadow-xl"
                     onClick={(e) => e.stopPropagation()}
                 >
-                    {EMOJIS.map(emoji => (
+                    {EMOJIS.map((emoji, index) => (
                         <button
                             key={emoji}
                             onClick={() => toggleReaction(emoji)}
-                            className={`w-10 h-10 rounded-full transition-all hover:scale-125 active:scale-95 flex items-center justify-center text-2xl ${userReaction?.emoji === emoji
-                                    ? 'bg-blue-100 dark:bg-blue-900/30 ring-2 ring-blue-500'
-                                    : 'hover:bg-zinc-100 dark:hover:bg-zinc-700'
-                                }`}
+                            className="w-9 h-9 rounded-full transition-all hover:scale-125 active:scale-90 flex items-center justify-center text-xl hover:bg-white/50 dark:hover:bg-white/10"
+                            style={{ animationDelay: `${index * 50}ms` }}
                             title={`React with ${emoji}`}
                         >
                             {emoji}
@@ -156,14 +155,16 @@ export const MessageReactions = ({ messageId, showPicker = false, onClose }: Mes
                             <button
                                 key={emoji}
                                 onClick={() => toggleReaction(emoji)}
-                                className={`px-2 py-1 rounded-full text-xs flex items-center space-x-1 transition-all hover:scale-110 active:scale-95 ${isUserReaction
-                                        ? 'bg-blue-100 dark:bg-blue-900/30 border-2 border-blue-500 dark:border-blue-600'
-                                        : 'bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600'
-                                    }`}
+                                className={twMerge(
+                                    "px-2 py-0.5 rounded-full text-xs flex items-center space-x-1 transition-all hover:scale-110 active:scale-95 border animate-pop backdrop-blur-sm",
+                                    isUserReaction
+                                        ? "bg-blue-100/80 dark:bg-blue-500/20 border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-300 shadow-[0_0_10px_rgba(59,130,246,0.2)]"
+                                        : "bg-white/60 dark:bg-zinc-800/60 border-zinc-200/50 dark:border-zinc-700/50 text-zinc-600 dark:text-zinc-400 hover:bg-white dark:hover:bg-zinc-700"
+                                )}
                                 title={isUserReaction ? 'Remove your reaction' : 'React with this emoji'}
                             >
-                                <span className="text-base">{emoji}</span>
-                                <span className={`text-xs font-semibold ${isUserReaction ? 'text-blue-600 dark:text-blue-400' : 'text-zinc-600 dark:text-zinc-400'}`}>
+                                <span className="text-sm shadow-sm filter drop-shadow-sm">{emoji}</span>
+                                <span className="font-semibold text-[10px] opacity-90">
                                     {count}
                                 </span>
                             </button>

@@ -90,11 +90,43 @@ export const ProfileView = () => {
                 <h1 className="text-3xl font-bold tracking-tight text-center dark:text-white mb-1">
                     {profile.full_name}
                 </h1>
-                <p className="text-zinc-500 dark:text-zinc-400 font-medium mb-6">@{profile.username}</p>
+                <p className="text-zinc-500 dark:text-zinc-400 font-medium mb-4">@{profile.username}</p>
+
+                {/* Status Badge */}
+                {profile.privacy_settings?.online_status !== 'hidden' && (
+                    <div className="flex items-center gap-2 mb-6 bg-zinc-50 dark:bg-white/5 py-1.5 px-3 rounded-full border border-zinc-100 dark:border-white/5">
+                        {profile.status === 'online' ? (
+                            <>
+                                <span className="relative flex h-2.5 w-2.5">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                                </span>
+                                <span className="font-medium text-green-600 dark:text-green-400" style={{ fontSize: 'calc(var(--font-size-base) * 0.85)' }}>Online Now</span>
+                            </>
+                        ) : profile.status === 'away' ? (
+                            <>
+                                <span className="h-2.5 w-2.5 rounded-full bg-yellow-500"></span>
+                                <span className="font-medium text-yellow-600 dark:text-yellow-400" style={{ fontSize: 'calc(var(--font-size-base) * 0.85)' }}>Away</span>
+                            </>
+                        ) : (
+                            <>
+                                <span className="h-2.5 w-2.5 rounded-full bg-zinc-300 dark:bg-zinc-600"></span>
+                                <span className="font-medium text-zinc-500 dark:text-zinc-400" style={{ fontSize: 'calc(var(--font-size-base) * 0.85)' }}>
+                                    {profile.last_seen
+                                        ? `Seen ${new Date(profile.last_seen).toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}`
+                                        : 'Offline'}
+                                </span>
+                            </>
+                        )}
+                    </div>
+                )}
 
                 {profile.bio && (
                     <div className="mb-8 max-w-xs text-center">
-                        <p className="text-zinc-600 dark:text-zinc-300 leading-relaxed text-[15px]">
+                        <p className="text-zinc-600 dark:text-zinc-300 leading-relaxed" style={{
+                            fontSize: 'var(--font-size-base)',
+                            fontFamily: 'var(--font-family-base)'
+                        }}>
                             {profile.bio}
                         </p>
                     </div>

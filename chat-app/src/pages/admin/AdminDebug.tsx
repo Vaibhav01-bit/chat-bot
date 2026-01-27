@@ -20,7 +20,7 @@ export const AdminDebug = () => {
 
             // 2. Query Admins
             addLog('Querying admins table...')
-            const { data, error, count } = await supabase
+            const { data, error } = await supabase
                 .from('admins')
                 .select('*', { count: 'exact' })
 

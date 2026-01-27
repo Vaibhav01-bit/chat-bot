@@ -16,7 +16,15 @@ export const Chat = () => {
     const { user } = useAuth()
     const { messages, loading, sendMessage } = useMessages(chatId!)
     const [newMessage, setNewMessage] = useState('')
-    const [partner, setPartner] = useState<{ id: string, full_name: string, avatar_url?: string, username?: string } | null>(null)
+    const [partner, setPartner] = useState<{
+        id: string,
+        full_name: string,
+        avatar_url?: string,
+        username?: string,
+        status?: 'online' | 'away' | 'offline',
+        last_seen?: string,
+        privacy_settings?: any
+    } | null>(null)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [isBlocked, setIsBlocked] = useState(false)
     const [isPartnerTyping, setIsPartnerTyping] = useState(false)
@@ -50,7 +58,7 @@ export const Chat = () => {
 
             const { data: profileData } = await supabase
                 .from('profiles')
-                .select('full_name, avatar_url, username')
+                .select('full_name, avatar_url, username, status, last_seen, privacy_settings')
                 .eq('id', partnerId)
                 .single()
 
@@ -67,13 +75,35 @@ export const Chat = () => {
                 // Set blocked status if any block record exists
                 setIsBlocked(!!(blockData && blockData.length > 0))
 
-                // Setup typing indicator presence
+                // Setup typing indicator presence AND profile status subscription
                 setupPresence(partnerId)
+                subscribeToProfileChanges(partnerId)
             }
         }
 
         fetchPartner()
     }, [chatId, user])
+
+    const subscribeToProfileChanges = (partnerId: string) => {
+        const channel = supabase.channel(`profile:${partnerId}`)
+            .on(
+                'postgres_changes',
+                {
+                    event: 'UPDATE',
+                    schema: 'public',
+                    table: 'profiles',
+                    filter: `id=eq.${partnerId}`,
+                },
+                (payload) => {
+                    setPartner(prev => prev ? { ...prev, ...payload.new } : null)
+                }
+            )
+            .subscribe()
+
+        return () => {
+            supabase.removeChannel(channel)
+        }
+    }
 
     const handleBlockToggle = async () => {
         if (!partner) return
@@ -210,7 +240,12 @@ export const Chat = () => {
 
     return (
         <PageTransition>
-            <div className="flex flex-col h-[100dvh] bg-zinc-50 dark:bg-zinc-950 relative">
+            <div className="flex flex-col h-[100dvh] bg-gradient-to-b from-[var(--chat-bg-gradient-start)] to-[var(--chat-bg-gradient-end)] relative overflow-hidden">
+                {/* Ambient Background Elements */}
+                <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                    <div className="absolute top-[-10%] right-[-5%] w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-float"></div>
+                    <div className="absolute bottom-[-10%] left-[-5%] w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-float delay-1000"></div>
+                </div>
                 {/* Header */}
                 <div className="sticky top-0 z-20 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border-b border-zinc-200/50 dark:border-zinc-800/50 pt-[env(safe-area-inset-top)] transition-all duration-300">
                     <div className="flex items-center px-4 h-16 max-w-3xl mx-auto w-full">
@@ -222,15 +257,26 @@ export const Chat = () => {
                         </button>
 
                         <div className="flex items-center flex-1 min-w-0">
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-50 dark:from-blue-900/30 dark:to-blue-800/10 flex items-center justify-center text-blue-600 dark:text-blue-400 font-semibold text-sm border border-white/20 dark:border-white/10 shadow-sm mr-3 flex-shrink-0">
-                                {partner?.avatar_url ? (
-                                    <img src={partner.avatar_url} alt={partner.full_name || 'Chat partner'} className="w-full h-full rounded-full object-cover" />
-                                ) : (
-                                    <span>{partner?.full_name?.[0] || '?'}</span>
+                            <div className="relative">
+                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-100 to-blue-50 dark:from-blue-900/30 dark:to-blue-800/10 flex items-center justify-center text-blue-600 dark:text-blue-400 font-semibold text-lg border border-white/20 dark:border-white/10 shadow-sm mr-4 flex-shrink-0 animate-fade-in group hover:scale-105 transition-transform duration-300">
+                                    {partner?.avatar_url ? (
+                                        <img src={partner.avatar_url} alt={partner.full_name || 'Chat partner'} className="w-full h-full rounded-full object-cover" />
+                                    ) : (
+                                        <span>{partner?.full_name?.[0] || '?'}</span>
+                                    )}
+                                </div>
+                                {isPartnerTyping || !partner ? null : (
+                                    <span className="absolute bottom-0.5 right-4 w-3.5 h-3.5 bg-green-500 border-2 border-white dark:border-zinc-900 rounded-full animate-pulse-ring"></span>
                                 )}
                             </div>
                             <div className="flex-1 min-w-0">
-                                <h3 className="font-semibold text-zinc-900 dark:text-white truncate text-[15px] leading-tight">
+                                <h3
+                                    className="font-semibold text-zinc-900 dark:text-white truncate leading-tight"
+                                    style={{
+                                        fontSize: 'var(--font-size-base)',
+                                        fontFamily: 'var(--font-family-base)'
+                                    }}
+                                >
                                     {partner?.full_name || 'Chat'}
                                 </h3>
                                 {isPartnerTyping ? (
@@ -241,9 +287,30 @@ export const Chat = () => {
                                         typing...
                                     </p>
                                 ) : (
-                                    <p className="text-xs text-green-500 font-medium flex items-center mt-0.5">
-                                        <span className="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5 animate-pulse"></span>
-                                        Online
+                                    <p
+                                        className="font-medium flex items-center mt-0.5 transition-colors"
+                                        style={{ fontSize: 'calc(var(--font-size-base) * 0.85)' }}
+                                    >
+                                        {/* Privacy Check */}
+                                        {partner?.privacy_settings?.online_status === 'hidden' ? (
+                                            <span className="text-zinc-400 dark:text-zinc-500">Last seen recently</span>
+                                        ) : partner?.status === 'online' ? (
+                                            <>
+                                                <span className="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5 animate-pulse"></span>
+                                                <span className="text-green-500">Online</span>
+                                            </>
+                                        ) : partner?.status === 'away' ? (
+                                            <>
+                                                <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-1.5"></span>
+                                                <span className="text-yellow-500">Away</span>
+                                            </>
+                                        ) : (
+                                            <span className="text-zinc-400 dark:text-zinc-500">
+                                                {partner?.last_seen
+                                                    ? `Last seen ${new Date(partner.last_seen).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
+                                                    : 'Offline'}
+                                            </span>
+                                        )}
                                     </p>
                                 )}
                             </div>
@@ -290,11 +357,14 @@ export const Chat = () => {
                             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 text-blue-600/50"></div>
                         </div>
                     ) : messages.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center h-full text-zinc-400 dark:text-zinc-500 space-y-4 animate-fade-in">
-                            <div className="w-16 h-16 rounded-2xl bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center">
-                                <Send size={32} className="opacity-20" />
+                        <div className="flex flex-col items-center justify-center h-full text-zinc-400/50 dark:text-zinc-500/50 space-y-6 animate-fade-in select-none">
+                            <div className="w-24 h-24 rounded-3xl bg-gradient-to-tr from-blue-50 to-blue-100/50 dark:from-blue-900/10 dark:to-blue-800/10 flex items-center justify-center shadow-inner animate-pulse-ring" style={{ animationDuration: '4s' }}>
+                                <span className="text-4xl opacity-80 animate-pop">👋</span>
                             </div>
-                            <p className="text-sm font-medium">No messages yet. Say hello!</p>
+                            <div className="text-center space-y-1">
+                                <p className="text-lg font-medium text-zinc-500 dark:text-zinc-400">Say hello!</p>
+                                <p className="text-sm text-zinc-400 dark:text-zinc-500">Start the conversation</p>
+                            </div>
                         </div>
                     ) : (
                         <div className="flex flex-col space-y-1 max-w-3xl mx-auto w-full">
@@ -313,6 +383,27 @@ export const Chat = () => {
                                     </div>
                                 )
                             })}
+
+                            {/* Typing Indicator Bubble */}
+                            {isPartnerTyping && (
+                                <div className="flex w-full mb-3 animate-slide-up">
+                                    <div className="flex-shrink-0 mr-2 self-end mb-1">
+                                        {partner?.avatar_url ? (
+                                            <div className="w-8 h-8 rounded-full overflow-hidden shadow-sm border border-white/10 opacity-80">
+                                                <img src={partner.avatar_url} alt="Typing" className="w-full h-full object-cover" />
+                                            </div>
+                                        ) : (
+                                            <div className="w-8 h-8 rounded-full bg-zinc-200 dark:bg-zinc-700 opacity-80" />
+                                        )}
+                                    </div>
+                                    <div className="px-4 py-3 bg-white dark:bg-zinc-800 rounded-[1.25rem] rounded-bl-[0.25rem] shadow-sm border border-zinc-100 dark:border-zinc-700/50 flex items-center gap-1">
+                                        <div className="typing-indicator scale-75 origin-left text-zinc-500 dark:text-zinc-400">
+                                            <span></span><span></span><span></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
                             <div ref={bottomRef} />
                         </div>
                     )}
@@ -330,10 +421,10 @@ export const Chat = () => {
                         </button>
                     </div>
                 ) : (
-                    <div className="fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border-t border-zinc-200/50 dark:border-zinc-800/50 p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] transition-all duration-300">
+                    <div className="fixed bottom-0 left-0 right-0 p-4 transition-all duration-300 pointer-events-none">
                         <form
                             onSubmit={handleSend}
-                            className="max-w-3xl mx-auto w-full flex items-end gap-2 p-2"
+                            className="max-w-3xl mx-auto w-full flex items-end gap-2 pointer-events-auto"
                         >
                             {/* Hidden file input */}
                             <input
@@ -359,7 +450,7 @@ export const Chat = () => {
                                 )}
                             </button>
 
-                            <div className="flex-1 bg-zinc-100 dark:bg-black/20 rounded-[1.25rem] border border-transparent focus-within:border-blue-500/30 focus-within:bg-white dark:focus-within:bg-zinc-900 focus-within:ring-4 focus-within:ring-blue-500/10 transition-all duration-200 overflow-visible min-h-[48px] flex items-center relative">
+                            <div className="flex-1 glass-panel rounded-[2rem] shadow-lg shadow-black/5 focus-within:shadow-blue-500/20 focus-within:border-blue-500/30 transition-all duration-300 flex items-center relative overflow-visible min-h-[52px]">
                                 <input
                                     ref={inputRef}
                                     type="text"
@@ -369,7 +460,7 @@ export const Chat = () => {
                                         handleTyping()
                                     }}
                                     placeholder="Message..."
-                                    className="w-full bg-transparent border-none pl-5 pr-12 py-3 text-[15px] focus:ring-0 placeholder:text-zinc-400 text-zinc-900 dark:text-white"
+                                    className="w-full bg-transparent border-none pl-6 pr-12 py-3.5 text-[15px] focus:ring-0 placeholder:text-zinc-500/70 text-zinc-900 dark:text-white"
                                 />
 
                                 {/* Emoji Picker Button */}
@@ -381,17 +472,17 @@ export const Chat = () => {
                                         console.log('Emoji button clicked!')
                                         setShowEmojiPicker(!showEmojiPicker)
                                     }}
-                                    className="absolute right-2 p-2 text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors rounded-full hover:bg-blue-50 dark:hover:bg-blue-900/20 active:scale-95 z-20"
+                                    className="absolute right-3 p-2 text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors rounded-full hover:bg-blue-50 dark:hover:bg-blue-900/20 active:scale-95 z-20"
                                     aria-label="Open emoji picker"
                                     title="Add emoji"
                                 >
-                                    <Smile size={20} />
+                                    <Smile size={22} className="hover:animate-pop" />
                                 </button>
 
                                 {/* Simple Inline Emoji Picker */}
                                 {showEmojiPicker && (
                                     <div
-                                        className="fixed bottom-20 right-4 w-80 bg-white dark:bg-zinc-800 rounded-xl shadow-2xl border-2 border-blue-500 p-4 z-[9999]"
+                                        className="absolute bottom-full right-0 mb-4 w-80 bg-white dark:bg-zinc-800 rounded-2xl shadow-2xl border border-zinc-100 dark:border-zinc-700 p-4 z-[9999] animate-scale-in origin-bottom-right"
                                         onClick={(e) => e.stopPropagation()}
                                     >
                                         <div className="flex justify-between items-center mb-3">
@@ -404,7 +495,7 @@ export const Chat = () => {
                                                 ✕
                                             </button>
                                         </div>
-                                        <div className="grid grid-cols-8 gap-2 max-h-64 overflow-y-auto">
+                                        <div className="grid grid-cols-8 gap-2 max-h-64 overflow-y-auto custom-scrollbar">
                                             {['😀', '😃', '😄', '😁', '😆', '😅', '🤣', '😂', '🙂', '🙃', '😉', '😊', '😇', '🥰', '😍', '🤩', '😘', '😗', '😚', '😙', '😋', '😛', '😜', '🤪', '😝', '🤑', '🤗', '🤭', '🤫', '🤔', '🤐', '🤨', '😐', '😑', '😶', '😏', '😒', '🙄', '😬', '😌', '😔', '😪', '🤤', '😴', '😷', '🤒', '🤕', '🤢', '🤮', '🤧', '🥵', '🥶', '😵', '🤯', '🤠', '🥳', '😎', '🤓', '🧐', '😕', '😟', '🙁', '☹️', '😮', '😯', '😲', '😳', '🥺', '😦', '😧', '😨', '😰', '😥', '😢', '😭', '😱', '😖', '😣', '😞', '😓', '😩', '😫', '🥱', '😤', '😡', '😠', '🤬', '😈', '👿', '💀', '☠️', '💩', '🤡', '👹', '👺', '👻', '👽', '👾', '🤖', '😺', '😸', '😹', '😻', '😼', '😽', '🙀', '😿', '😾', '👋', '🤚', '🖐', '✋', '🖖', '👌', '🤌', '🤏', '✌️', '🤞', '🤟', '🤘', '🤙', '👈', '👉', '👆', '🖕', '👇', '☝️', '👍', '👎', '✊', '👊', '🤛', '🤜', '👏', '🙌', '👐', '🤲', '🤝', '🙏', '❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❤️‍🔥', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '💟', '☮️', '✝️', '☪️', '🕉', '☸️', '✡️', '🔯', '🕎', '☯️', '☦️', '🛐', '⛎', '♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓', '🆔', '⚛️', '🔥', '✨', '⭐', '🌟', '💫', '💥', '💢', '💦', '💨', '🕊', '🦋', '🐝', '🐞', '🦗', '🕷', '🦂', '🐢', '🐍', '🦎', '🦖', '🦕', '🐙', '🦑', '🦐', '🦞', '🦀', '🐡', '🐠', '🐟', '🐬', '🐳', '🐋', '🦈', '🐊', '🐅', '🐆', '🦓', '🦍', '🦧', '🐘', '🦛', '🦏', '🐪', '🐫', '🦒', '🦘', '🐃', '🐂', '🐄', '🐎', '🐖', '🐏', '🐑', '🦙', '🐐', '🦌', '🐕', '🐩', '🐈', '🐓', '🦃', '🦚', '🦜', '🦢', '🦩', '🕊', '🐇', '🦝', '🦨', '🦡', '🦦', '🦥', '🐁', '🐀', '🐿', '🦔', '🍇', '🍈', '🍉', '🍊', '🍋', '🍌', '🍍', '🥭', '🍎', '🍏', '🍐', '🍑', '🍒', '🍓', '🥝', '🍅', '🥥', '🥑', '🍆', '🥔', '🥕', '🌽', '🌶', '🥒', '🥬', '🥦', '🧄', '🧅', '🍄', '🥜', '🌰', '🍞', '🥐', '🥖', '🥨', '🥯', '🥞', '🧇', '🧀', '🍖', '🍗', '🥩', '🥓', '🍔', '🍟', '🍕', '🌭', '🥪', '🌮', '🌯', '🥙', '🧆', '🥚', '🍳', '🥘', '🍲', '🥣', '🥗', '🍿', '🧈', '🧂', '🥫', '🍱', '🍘', '🍙', '🍚', '🍛', '🍜', '🍝', '🍠', '🍢', '🍣', '🍤', '🍥', '🥮', '🍡', '🥟', '🥠', '🥡', '🍦', '🍧', '🍨', '🍩', '🍪', '🎂', '🍰', '🧁', '🥧', '🍫', '🍬', '🍭', '🍮', '🍯', '🍼', '🥛', '☕', '🍵', '🍶', '🍾', '🍷', '🍸', '🍹', '🍺', '🍻', '🥂', '🥃', '🥤', '🧃', '🧉', '🧊', '⚽', '🏀', '🏈', '⚾', '🥎', '🎾', '🏐', '🏉', '🥏', '🎱', '🏓', '🏸', '🏒', '🏑', '🥍', '🏏', '🥅', '⛳', '🏹', '🎣', '🤿', '🥊', '🥋', '🎽', '🛹', '🛼', '⛸', '🥌', '🎿', '⛷', '🏂', '🏋️', '🤼', '🤸', '⛹️', '🤾', '🏌️', '🏇', '🧘', '🏊', '🤽', '🚣', '🧗', '🚴', '🚵', '🎪', '🎭', '🎨', '🎬', '🎤', '🎧', '🎼', '🎹', '🥁', '🎷', '🎺', '🎸', '🎻', '🎲', '🎯', '🎳', '🎮', '🎰', '🧩', '✅', '❌', '⭕', '🔥', '💯', '💢', '💬', '💭', '🗯', '💤', '💮', '♨️', '💈', '🛑', '⛔', '📛', '🚫', '💯', '💢', '🔞', '⚠️', '🚸', '⚡', '🌈', '⭐', '🌟', '✨', '⚡', '🔥', '💥', '💫', '💦', '💨', '☁️', '🌤', '⛅', '🌥', '☁️', '🌦', '🌧', '⛈', '🌩', '🌨', '❄️', '☃️', '⛄', '🌬', '💨', '💧', '💦', '☔', '☂️', '🌊', '🌫'].map((emoji, idx) => (
                                                 <button
                                                     key={idx}
@@ -437,9 +528,9 @@ export const Chat = () => {
                             <button
                                 type="submit"
                                 disabled={!newMessage.trim()}
-                                className="p-3 bg-blue-600 text-white rounded-full shadow-lg shadow-blue-500/30 hover:bg-blue-700 disabled:opacity-50 disabled:shadow-none disabled:bg-zinc-200 dark:disabled:bg-zinc-800 dark:disabled:text-zinc-600 transition-all duration-200 active:scale-90 flex-shrink-0 hover:rotate-[-10deg]"
+                                className="p-3.5 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-full shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-105 disabled:opacity-50 disabled:shadow-none disabled:scale-100 transition-all duration-300 active:scale-95 flex-shrink-0"
                             >
-                                <Send size={20} className={newMessage.trim() ? 'translate-x-[2px] -translate-y-[1px]' : ''} />
+                                <Send size={20} className={newMessage.trim() ? 'translate-x-0.5 -translate-y-0.5' : ''} />
                             </button>
                         </form>
                     </div>

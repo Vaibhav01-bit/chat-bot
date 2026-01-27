@@ -37,6 +37,14 @@ export const AdminDashboard = () => {
         }
     }
 
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center flex-1 h-full min-h-[400px]">
+                <div className="text-slate-400 animate-pulse">Loading dashboard statistics...</div>
+            </div>
+        )
+    }
+
     return (
         <div className="p-8 max-w-7xl mx-auto">
             <div className="flex justify-between items-center mb-8">

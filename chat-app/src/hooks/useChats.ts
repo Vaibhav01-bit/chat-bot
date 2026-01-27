@@ -15,6 +15,9 @@ export interface ChatType {
         full_name: string
         avatar_url: string
         username: string
+        status?: 'online' | 'away' | 'offline'
+        last_seen?: string
+        privacy_settings?: any
     }
 }
 
@@ -48,7 +51,7 @@ export function useChats() {
             // 2. Get partners
             const { data: participants } = await supabase
                 .from('chat_participants')
-                .select('chat_id, user_id, profiles(id, full_name, avatar_url, username)')
+                .select('chat_id, user_id, profiles(id, full_name, avatar_url, username, status, last_seen, privacy_settings)')
                 .in('chat_id', chatIds)
                 .neq('user_id', user.id)
 

@@ -58,6 +58,7 @@ export const Home = () => {
                                     avatarUrl={chat.partner?.avatar_url}
                                     lastMessage={chat.last_message?.content}
                                     time={chat.last_message?.created_at ? new Date(chat.last_message.created_at).toLocaleDateString() : undefined}
+                                    status={chat.partner?.privacy_settings?.online_status === 'hidden' ? undefined : chat.partner?.status}
                                     onClick={() => navigate(`/chat/${chat.id}`)} // Navigate to chat
                                 />
                             </div>

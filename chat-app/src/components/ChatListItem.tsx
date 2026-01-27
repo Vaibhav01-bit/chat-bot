@@ -8,10 +8,11 @@ interface ChatListItemProps {
     time?: string
     unreadCount?: number
     isActive?: boolean
+    status?: 'online' | 'away' | 'offline'
     onClick: () => void
 }
 
-export function ChatListItem({ name, avatarUrl, lastMessage, time, unreadCount, isActive, onClick }: ChatListItemProps) {
+export function ChatListItem({ name, avatarUrl, lastMessage, time, unreadCount, isActive, status, onClick }: ChatListItemProps) {
     return (
         <div
             onClick={onClick}
@@ -46,14 +47,30 @@ export function ChatListItem({ name, avatarUrl, lastMessage, time, unreadCount, 
                             </div>
                         )}
                     </div>
+
+                    {/* Status Indicator */}
+                    {status && (
+                        <div className={twMerge(
+                            "absolute bottom-0.5 right-0.5 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-[#151821]",
+                            status === 'online' ? "bg-green-500 animate-pulse-ring" :
+                                status === 'away' ? "bg-yellow-500" :
+                                    "bg-zinc-400"
+                        )}></div>
+                    )}
                 </div>
 
                 <div className="flex-1 min-w-0 py-1">
                     <div className="flex justify-between items-baseline mb-1.5">
-                        <h3 className={twMerge(
-                            "text-[16px] font-bold truncate transition-colors tracking-tight",
-                            isActive ? "text-blue-600 dark:text-blue-400" : "text-zinc-900 dark:text-zinc-100 group-hover:text-black dark:group-hover:text-white"
-                        )}>
+                        <h3
+                            className={twMerge(
+                                "font-bold truncate transition-colors tracking-tight",
+                                isActive ? "text-blue-600 dark:text-blue-400" : "text-zinc-900 dark:text-zinc-100 group-hover:text-black dark:group-hover:text-white"
+                            )}
+                            style={{
+                                fontSize: 'var(--font-size-base)',
+                                fontFamily: 'var(--font-family-base)'
+                            }}
+                        >
                             {name || 'Unknown User'}
                         </h3>
                         {time && (
@@ -66,14 +83,20 @@ export function ChatListItem({ name, avatarUrl, lastMessage, time, unreadCount, 
                         )}
                     </div>
                     <div className="flex justify-between items-center h-5">
-                        <p className={twMerge(
-                            "text-sm truncate max-w-[85%] leading-relaxed transition-colors",
-                            unreadCount
-                                ? "text-zinc-900 dark:text-white font-semibold"
-                                : isActive
-                                    ? "text-blue-800/70 dark:text-blue-200/70"
-                                    : "text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300"
-                        )}>
+                        <p
+                            className={twMerge(
+                                "truncate max-w-[85%] leading-relaxed transition-colors",
+                                unreadCount
+                                    ? "text-zinc-900 dark:text-white font-semibold"
+                                    : isActive
+                                        ? "text-blue-800/70 dark:text-blue-200/70"
+                                        : "text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300"
+                            )}
+                            style={{
+                                fontSize: 'calc(var(--font-size-base) * 0.9)',
+                                fontFamily: 'var(--font-family-base)'
+                            }}
+                        >
                             {lastMessage || 'Tap to start chatting'}
                         </p>
                         {unreadCount ? (
