@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Search, Filter, MoreVertical, Shield, Ban, Trash2 } from 'lucide-react'
+import { Search, Filter, MoreVertical, Ban } from 'lucide-react'
 import { supabase } from '../../services/supabaseClient'
 
 export const AdminUsers = () => {
     const [users, setUsers] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
     const [search, setSearch] = useState('')
-    const [filter, setFilter] = useState('all') // all, active, suspended
 
     useEffect(() => {
         fetchUsers()

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Trash2, Eye, AlertTriangle } from 'lucide-react'
+import { Trash2, Eye } from 'lucide-react'
 import { supabase } from '../../services/supabaseClient'
 
 export const AdminStatuses = () => {

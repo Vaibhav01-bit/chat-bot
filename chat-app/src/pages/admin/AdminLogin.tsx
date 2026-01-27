@@ -22,44 +22,31 @@ export const AdminLogin = () => {
         try {
             console.log('Attempting login for:', cleanUsername)
 
-            // 1. Try to find the user first to diagnose
-            const { data: userCheck, error: userCheckError } = await supabase
-                .from('admins')
-                .select('username, password, role, id') // Select specific columns
-                .eq('username', cleanUsername)
-                .single()
+            // Secure Login via Edge Function
+            const { data, error } = await supabase.functions.invoke('admin-auth', {
+                body: { email: cleanUsername, password: cleanPassword }
+            })
 
-            if (userCheckError) {
-                console.error('User lookup error:', userCheckError)
-                throw new Error(`User not found: ${userCheckError.message}`)
+            console.log('Login Response:', { data, error })
+
+            if (error) {
+                alert('Supabase Error: ' + JSON.stringify(error))
+                throw error
             }
-
-            if (!userCheck) {
-                throw new Error('User does not exist.')
-            }
-
-            console.log('User found, checking password...')
-
-            // 2. Verify password (simple string comparison for MVP)
-            if (userCheck.password !== cleanPassword) {
-                console.error('Password mismatch')
-                throw new Error('Invalid password.')
+            if (data?.error) {
+                alert('API Error: ' + data.error)
+                throw new Error(data.error)
             }
 
             // Success
-            localStorage.setItem('admin_token', 'secure_token_' + userCheck.id)
-            localStorage.setItem('admin_role', userCheck.role)
-            navigate('/admin/dashboard')
-
-            // Log activity
-            await supabase.from('admin_activity_logs').insert({
-                admin_id: userCheck.id,
-                action_type: 'LOGIN',
-                details: { timestamp: new Date().toISOString() }
-            })
+            localStorage.setItem('admin_token', data.token)
+            localStorage.setItem('admin_role', data.role)
+            // Force page reload to ensure AdminLayout picks up the token
+            window.location.href = '/admin/dashboard'
 
         } catch (err: any) {
             console.error('Login flow error:', err)
+            // alert('Catch Error: ' + err.message) // Optional, but let's keep it clean
             setError(err.message || 'Login failed')
         } finally {
             setLoading(false)
@@ -85,13 +72,13 @@ export const AdminLogin = () => {
                     )}
 
                     <div className="space-y-1">
-                        <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider ml-1">Username</label>
+                        <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider ml-1">Email Address</label>
                         <input
-                            type="text"
+                            type="email"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all placeholder-slate-600"
-                            placeholder="Enter username"
+                            placeholder="Enter admin email"
                         />
                     </div>
 
