@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Chess } from 'chess.js'
+// import { Chess } from 'chess.js'
 import { X, Trophy, Flag } from 'lucide-react'
 import { ChessBoard } from './ChessBoard'
 import { supabase } from '../../services/supabaseClient'
@@ -39,7 +39,15 @@ export const GameRoom: React.FC<GameRoomProps> = ({ chatId, sessionId: initialGa
     const [blackTime, setBlackTime] = useState(600)
 
     const timerRef = useRef<number | null>(null)
-    const chessRef = useRef(new Chess())
+    // const chessRef = useRef(new Chess()) // Temporarily disabled
+
+    // Mock chess object for deployment
+    const chessRef = useRef({
+        load: (_fen: string) => { },
+        turn: () => 'w' as 'w' | 'b',
+        move: (_move: any) => ({ san: '' }),
+        fen: () => 'start'
+    })
 
     useEffect(() => {
         if (initialGameId) {

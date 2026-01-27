@@ -1,5 +1,5 @@
 import React from 'react'
-import { Chessboard } from 'react-chessboard'
+// import { Chessboard } from 'react-chessboard'
 
 interface ChessBoardProps {
     fen: string
@@ -9,8 +9,15 @@ interface ChessBoardProps {
     lastMove?: { from: string, to: string } | null
 }
 
-export const ChessBoard: React.FC<ChessBoardProps> = ({ fen, orientation, onMove, disabled, lastMove }) => {
+export const ChessBoard: React.FC<ChessBoardProps> = () => {
+    return (
+        <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#1a1a1a', color: 'white' }}>
+            <p>Chess feature temporarily disabled for deployment</p>
+        </div>
+    )
+}
 
+/* Temporarily disabled for deployment
     function onPieceDrop({ sourceSquare, targetSquare }: { sourceSquare: string, targetSquare: string | null }): boolean {
         if (disabled || !targetSquare) return false
         try {
@@ -40,4 +47,5 @@ export const ChessBoard: React.FC<ChessBoardProps> = ({ fen, orientation, onMove
             />
         </div>
     )
-}
+*/
+
