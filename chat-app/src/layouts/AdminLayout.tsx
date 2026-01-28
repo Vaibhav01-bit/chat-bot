@@ -5,16 +5,45 @@ import { useEffect } from 'react'
 export const AdminLayout = () => {
     const navigate = useNavigate()
     const location = useLocation()
-    const isAdmin = localStorage.getItem('admin_token')
+    const getAdminSession = () => {
+        try {
+            const session = localStorage.getItem('admin_session')
+            if (!session) {
+                // Fallback to legacy check if session object doesn't exist yet
+                const legacyToken = localStorage.getItem('admin_token')
+                return legacyToken ? { token: legacyToken } : null
+            }
+
+            const data = JSON.parse(session)
+            if (Date.now() > data.expiresAt) {
+                localStorage.removeItem('admin_session')
+                localStorage.removeItem('admin_token')
+                localStorage.removeItem('admin_role')
+                return null
+            }
+
+            return data
+        } catch {
+            return null
+        }
+    }
+
+    const isAdmin = getAdminSession()
 
     useEffect(() => {
         if (!isAdmin && location.pathname !== '/admin/login') {
+            // Clean up potentially stale items
+            localStorage.removeItem('admin_token')
+            localStorage.removeItem('admin_role')
+            localStorage.removeItem('admin_session')
             navigate('/admin/login')
         }
     }, [isAdmin, navigate, location])
 
     const handleLogout = () => {
         localStorage.removeItem('admin_token')
+        localStorage.removeItem('admin_role')
+        localStorage.removeItem('admin_session')
         navigate('/admin/login')
     }
 
@@ -69,8 +98,8 @@ const NavItem = ({ to, icon, label, active }: { to: string, icon: React.ReactNod
         <button
             onClick={() => navigate(to)}
             className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${active
-                    ? 'bg-emerald-500/10 text-emerald-400 font-semibold'
-                    : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800'
+                ? 'bg-emerald-500/10 text-emerald-400 font-semibold'
+                : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800'
                 }`}
         >
             {icon}

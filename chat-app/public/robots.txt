@@ -1,0 +1,20 @@
+# ChatMate - Robots.txt
+# Allow search engines to crawl public pages
+
+User-agent: *
+Allow: /
+Allow: /login
+Allow: /signup
+
+# Disallow private/protected pages
+Disallow: /admin/
+Disallow: /settings/
+Disallow: /chat/
+Disallow: /profile/
+Disallow: /status/
+Disallow: /search
+Disallow: /random
+Disallow: /requests
+
+# Sitemap location
+Sitemap: https://chatmate.vercel.app/sitemap.xml

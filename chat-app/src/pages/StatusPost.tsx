@@ -4,6 +4,7 @@ import { Check, X } from 'lucide-react'
 import { supabase } from '../services/supabaseClient'
 import { useAuth } from '../context/AuthContext'
 import { Button } from '../components/Button'
+import { FILE_UPLOAD_LIMITS, isValidFileSize, isValidImageType } from '../utils/sanitize'
 
 export const StatusPost = () => {
     const { user } = useAuth()
@@ -16,6 +17,21 @@ export const StatusPost = () => {
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             const f = e.target.files[0]
+
+            // Validate file type
+            if (!isValidImageType(f.type, FILE_UPLOAD_LIMITS.STATUS_IMAGE.ALLOWED_TYPES)) {
+                alert('Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed.')
+                e.target.value = '' // Reset input
+                return
+            }
+
+            // Validate file size
+            if (!isValidFileSize(f.size, FILE_UPLOAD_LIMITS.STATUS_IMAGE.MAX_SIZE_MB)) {
+                alert(`File too large. Maximum size is ${FILE_UPLOAD_LIMITS.STATUS_IMAGE.MAX_SIZE_MB}MB.`)
+                e.target.value = '' // Reset input
+                return
+            }
+
             setFile(f)
             setPreview(URL.createObjectURL(f))
         }

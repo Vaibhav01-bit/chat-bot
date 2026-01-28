@@ -7,6 +7,7 @@ import { Input } from '../components/Input'
 import { Button } from '../components/Button'
 import { AvatarSelectionGrid } from '../components/AvatarSelectionGrid'
 import { ImageCropper } from '../components/ImageCropper'
+import { FILE_UPLOAD_LIMITS, isValidFileSize, isValidImageType } from '../utils/sanitize'
 
 export const ProfileEdit = () => {
     const { user } = useAuth()
@@ -50,6 +51,21 @@ export const ProfileEdit = () => {
     const onFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
             const file = e.target.files[0]
+
+            // Validate file type
+            if (!isValidImageType(file.type, FILE_UPLOAD_LIMITS.AVATAR_IMAGE.ALLOWED_TYPES)) {
+                alert('Invalid file type. Only JPEG, PNG, and WebP images are allowed.')
+                e.target.value = '' // Reset input
+                return
+            }
+
+            // Validate file size
+            if (!isValidFileSize(file.size, FILE_UPLOAD_LIMITS.AVATAR_IMAGE.MAX_SIZE_MB)) {
+                alert(`File too large. Maximum size is ${FILE_UPLOAD_LIMITS.AVATAR_IMAGE.MAX_SIZE_MB}MB.`)
+                e.target.value = '' // Reset input
+                return
+            }
+
             const reader = new FileReader()
             reader.addEventListener('load', () => {
                 setSelectedFile(reader.result?.toString() || null)

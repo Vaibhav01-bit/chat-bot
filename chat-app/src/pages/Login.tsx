@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { supabase } from '../services/supabaseClient'
 import { Button } from '../components/Button'
 import { Input } from '../components/Input'
@@ -32,6 +33,14 @@ export const Login = () => {
 
     return (
         <AuthLayout>
+            <Helmet>
+                <title>Login – ChatMate</title>
+                <meta name="description" content="Sign in to ChatMate to access your chats, statuses, and connect with friends in real-time." />
+                <meta property="og:title" content="Login – ChatMate" />
+                <meta property="og:description" content="Sign in to ChatMate to access your chats, statuses, and connect with friends." />
+                <link rel="canonical" href="https://chatmate.vercel.app/login" />
+            </Helmet>
+
             <div className="text-center mb-8 animate-fade-in">
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Welcome Back</h1>
                 <p className="text-gray-500 dark:text-gray-400 mt-2 text-sm z-10">Sign in to continue to ChatMate</p>

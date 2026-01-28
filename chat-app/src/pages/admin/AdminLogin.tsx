@@ -37,6 +37,17 @@ export const AdminLogin = () => {
             }
 
             // Success
+            // Store with expiration (1 hour)
+            const tokenData = {
+                token: data.token,
+                role: data.role,
+                expiresAt: Date.now() + (60 * 60 * 1000)
+            }
+            localStorage.setItem('admin_session', JSON.stringify(tokenData))
+
+            // Legacy/Direct checks might need these, but we rely on admin_session mostly now
+            // keeping for compatibility if other components check these directly, 
+            // but fundamentally we should move to getAdminSession()
             localStorage.setItem('admin_token', data.token)
             localStorage.setItem('admin_role', data.role)
             // Force page reload to ensure AdminLayout picks up the token

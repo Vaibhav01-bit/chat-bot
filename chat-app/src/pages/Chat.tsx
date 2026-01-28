@@ -11,6 +11,7 @@ import { PageTransition } from '../components/PageTransition'
 import { safetyService } from '../services/safetyService'
 import { supabase } from '../services/supabaseClient'
 import { useStreaks } from '../hooks/useStreaks'
+import { isValidFileSize } from '../utils/sanitize'
 
 export const Chat = () => {
     const { chatId } = useParams<{ chatId: string }>()
@@ -212,8 +213,15 @@ export const Chat = () => {
         const file = e.target.files?.[0]
         if (!file || !user || !chatId) return
 
-        if (file.size > 10 * 1024 * 1024) {
+        // Use centralized validation
+        if (!isValidFileSize(file.size, 10)) {
             showToast('File size must be less than 10MB', 'error')
+            return
+        }
+
+        // Validate type as well for security
+        if (!file.type.startsWith('image/')) {
+            showToast('Only image files are allowed', 'error')
             return
         }
 
