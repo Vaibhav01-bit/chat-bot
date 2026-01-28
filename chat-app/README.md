@@ -2,6 +2,8 @@
 
 A modern chat app that actually feels good to use.
 
+**[🚀 Live Demo](https://chatcat-nu.vercel.app)** | [GitHub](https://github.com/Vaibhav01-bit/chat-bot)
+
 ---
 
 ## What is this?
