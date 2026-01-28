@@ -12,38 +12,75 @@ interface ChatListItemProps {
     onClick: () => void
 }
 
+// Helper function to format message preview
+function formatMessagePreview(message?: string): string {
+    if (!message) return 'Tap to start chatting'
+
+    // Check if it's a JSON string (game invite)
+    try {
+        const parsed = JSON.parse(message)
+        if (parsed.type === 'invite' && parsed.gameType) {
+            return `🎮 Sent a ${parsed.gameType} invite`
+        }
+    } catch {
+        // Not JSON, just return the message
+    }
+
+    return message
+}
+
 export function ChatListItem({ name, avatarUrl, lastMessage, time, unreadCount, isActive, status, onClick }: ChatListItemProps) {
+    const displayMessage = formatMessagePreview(lastMessage)
     return (
         <div
             onClick={onClick}
             className={twMerge(
-                "group relative p-4 mb-3 rounded-2xl cursor-pointer transition-all duration-300 border",
-                // Base styles with nuanced border for depth
-                "bg-white dark:bg-[#151821] border-zinc-100 dark:border-white/5",
-                // Hover state (Scale, Lift & Shadow)
-                "hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-zinc-200/50 dark:hover:shadow-black/40 hover:border-zinc-200 dark:hover:border-white/10 hover:z-10",
-                // Active State (Gradient Border & Glow)
-                isActive
-                    ? "ring-2 ring-blue-500/50 dark:ring-blue-500/50 shadow-md bg-blue-50/40 dark:bg-blue-900/10 border-blue-200 dark:border-blue-800/30"
-                    : ""
+                "group relative p-5 mb-3 rounded-[20px] cursor-pointer transition-all duration-300 border",
+                "bg-white dark:bg-[var(--clay-surface)] border-zinc-200/60 dark:border-white/5",
+                "active:scale-[0.98]",
+                isActive && "ring-2 ring-[var(--accent-primary)]/30 bg-blue-50/40 dark:bg-blue-900/10 border-blue-200/50 dark:border-blue-800/30"
             )}
+            style={{
+                boxShadow: isActive
+                    ? '0 -2px 10px rgba(255,255,255,0.5), 0 8px 20px rgba(107,138,255,0.2), inset 0 1px 0 rgba(255,255,255,0.3)'
+                    : '0 -2px 8px rgba(255,255,255,0.4), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.25)'
+            }}
+            onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-3px)'
+                if (isActive) {
+                    e.currentTarget.style.boxShadow = '0 -3px 14px rgba(255,255,255,0.6), 0 12px 28px rgba(107,138,255,0.3), inset 0 1px 0 rgba(255,255,255,0.35)'
+                } else {
+                    e.currentTarget.style.boxShadow = '0 -3px 12px rgba(255,255,255,0.5), 0 8px 20px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.3)'
+                }
+            }}
+            onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)'
+                if (isActive) {
+                    e.currentTarget.style.boxShadow = '0 -2px 10px rgba(255,255,255,0.5), 0 8px 20px rgba(107,138,255,0.2), inset 0 1px 0 rgba(255,255,255,0.3)'
+                } else {
+                    e.currentTarget.style.boxShadow = '0 -2px 8px rgba(255,255,255,0.4), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.25)'
+                }
+            }}
         >
             <div className="flex items-center space-x-4">
                 {/* Avatar with Status Ring */}
                 <div className="relative flex-shrink-0">
                     {/* Animated Ring on Hover */}
-                    <div className="absolute -inset-1 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 opacity-0 group-hover:opacity-20 blur-sm transition-opacity duration-500"></div>
+                    <div className="absolute -inset-1.5 rounded-full bg-gradient-to-tr from-[var(--accent-primary)] to-[var(--accent-tertiary)] opacity-0 group-hover:opacity-20 blur-md transition-opacity duration-500"></div>
 
                     <div className={twMerge(
-                        "relative w-14 h-14 rounded-full overflow-hidden flex items-center justify-center transition-transform duration-300 shadow-sm",
-                        isActive ? "ring-2 ring-blue-500 ring-offset-2 ring-offset-white dark:ring-offset-[#151821]" : "ring-1 ring-zinc-100 dark:ring-zinc-800",
+                        "relative w-14 h-14 rounded-full overflow-hidden flex items-center justify-center transition-transform duration-300",
+                        isActive ? "ring-2 ring-[var(--accent-primary)] ring-offset-2 ring-offset-white dark:ring-offset-[var(--clay-surface)]" : "ring-1 ring-zinc-200 dark:ring-zinc-700",
                         "group-hover:scale-105"
-                    )}>
+                    )}
+                        style={{
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.2)'
+                        }}>
                         {avatarUrl ? (
                             <img src={avatarUrl} alt={name} className="w-full h-full object-cover" />
                         ) : (
-                            <div className="w-full h-full bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center">
-                                <User className="w-6 h-6 text-zinc-300 dark:text-zinc-600" />
+                            <div className="w-full h-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
+                                <User className="w-6 h-6 text-zinc-400 dark:text-zinc-600" />
                             </div>
                         )}
                     </div>
@@ -51,11 +88,14 @@ export function ChatListItem({ name, avatarUrl, lastMessage, time, unreadCount, 
                     {/* Status Indicator */}
                     {status && (
                         <div className={twMerge(
-                            "absolute bottom-0.5 right-0.5 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-[#151821]",
+                            "absolute bottom-0.5 right-0.5 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-[var(--clay-surface)]",
                             status === 'online' ? "bg-green-500 animate-pulse-ring" :
                                 status === 'away' ? "bg-yellow-500" :
                                     "bg-zinc-400"
-                        )}></div>
+                        )}
+                            style={{
+                                boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
+                            }}></div>
                     )}
                 </div>
 
@@ -64,7 +104,7 @@ export function ChatListItem({ name, avatarUrl, lastMessage, time, unreadCount, 
                         <h3
                             className={twMerge(
                                 "font-bold truncate transition-colors tracking-tight",
-                                isActive ? "text-blue-600 dark:text-blue-400" : "text-zinc-900 dark:text-zinc-100 group-hover:text-black dark:group-hover:text-white"
+                                isActive ? "text-[var(--accent-primary)]" : "text-zinc-900 dark:text-zinc-100 group-hover:text-black dark:group-hover:text-white"
                             )}
                             style={{
                                 fontSize: 'var(--font-size-base)',
@@ -76,7 +116,7 @@ export function ChatListItem({ name, avatarUrl, lastMessage, time, unreadCount, 
                         {time && (
                             <span className={twMerge(
                                 "text-xs font-medium transition-colors",
-                                unreadCount ? "text-blue-600 dark:text-blue-400" : "text-zinc-400 dark:text-zinc-500"
+                                unreadCount ? "text-[var(--accent-primary)]" : "text-zinc-400 dark:text-zinc-500"
                             )}>
                                 {time}
                             </span>
@@ -97,10 +137,13 @@ export function ChatListItem({ name, avatarUrl, lastMessage, time, unreadCount, 
                                 fontFamily: 'var(--font-family-base)'
                             }}
                         >
-                            {lastMessage || 'Tap to start chatting'}
+                            {displayMessage}
                         </p>
                         {unreadCount ? (
-                            <div className="flex-shrink-0 min-w-[20px] h-5 px-1.5 rounded-full bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30 animate-pulse">
+                            <div className="flex-shrink-0 min-w-[22px] h-5 px-2 rounded-full bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-tertiary)] flex items-center justify-center animate-pulse"
+                                style={{
+                                    boxShadow: '0 4px 12px rgba(107,138,255,0.4), inset 0 1px 0 rgba(255,255,255,0.3)'
+                                }}>
                                 <span className="text-[10px] text-white font-bold">{unreadCount}</span>
                             </div>
                         ) : null}

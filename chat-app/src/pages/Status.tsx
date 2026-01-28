@@ -28,12 +28,12 @@ export const Status = () => {
 
     return (
         <PageTransition>
-            <div className="flex flex-col h-full bg-white dark:bg-[var(--background)]">
+            <div className="flex flex-col h-full bg-[var(--background)]">
                 {/* Header */}
                 <div className="px-6 pt-8 pb-6">
                     <div className="flex justify-between items-start mb-2">
                         <div>
-                            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            <h1 className="text-3xl font-bold bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-tertiary)] bg-clip-text text-transparent">
                                 Status
                             </h1>
                             <p className="text-zinc-500 dark:text-zinc-400 mt-1 font-medium">
@@ -42,7 +42,18 @@ export const Status = () => {
                         </div>
                         <button
                             onClick={() => navigate('/status/post')}
-                            className="bg-zinc-900 dark:bg-white text-white dark:text-black px-4 py-2 rounded-full font-semibold text-sm shadow-lg shadow-zinc-500/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
+                            className="bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-tertiary)] text-white px-5 py-2.5 rounded-full font-semibold text-sm transition-all active:scale-95 flex items-center gap-2"
+                            style={{
+                                boxShadow: '0 -2px 8px rgba(255,255,255,0.2), 0 6px 16px rgba(107,138,255,0.3), inset 0 1px 0 rgba(255,255,255,0.25)'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'translateY(-2px)'
+                                e.currentTarget.style.boxShadow = '0 -3px 12px rgba(255,255,255,0.25), 0 10px 24px rgba(107,138,255,0.4), inset 0 1px 0 rgba(255,255,255,0.3)'
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'translateY(0)'
+                                e.currentTarget.style.boxShadow = '0 -2px 8px rgba(255,255,255,0.2), 0 6px 16px rgba(107,138,255,0.3), inset 0 1px 0 rgba(255,255,255,0.25)'
+                            }}
                         >
                             <Plus size={18} />
                             <span>Create</span>
@@ -53,14 +64,28 @@ export const Status = () => {
                 <div className="flex-1 overflow-y-auto px-6 pb-24">
                     {/* My Status Section */}
                     <section className="mb-8">
-                        <h2 className="text-sm font-bold text-zinc-400 uppercase tracking-wider mb-4">My Status</h2>
+                        <h2 className="text-sm font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mb-4">My Status</h2>
                         <div
                             onClick={() => navigate(myStatus ? `/status/${user?.id}` : '/status/post')}
-                            className="group relative h-28 bg-zinc-50 dark:bg-[var(--card)] rounded-3xl p-4 flex items-center gap-4 cursor-pointer border border-zinc-100 dark:border-zinc-800/50 hover:border-blue-500/30 hover:shadow-xl hover:shadow-blue-900/5 transition-all duration-300"
+                            className="group relative h-28 rounded-[24px] p-5 flex items-center gap-4 cursor-pointer border border-zinc-200/60 dark:border-zinc-700/50 bg-white dark:bg-[var(--clay-surface)] transition-all duration-200 active:scale-[0.98]"
+                            style={{
+                                boxShadow: '0 -2px 8px rgba(255,255,255,0.4), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.25)'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'translateY(-2px)'
+                                e.currentTarget.style.boxShadow = '0 -3px 12px rgba(255,255,255,0.5), 0 8px 20px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.3)'
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'translateY(0)'
+                                e.currentTarget.style.boxShadow = '0 -2px 8px rgba(255,255,255,0.4), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.25)'
+                            }}
                         >
                             <div className="relative">
-                                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 p-[2px]">
-                                    <div className="w-full h-full rounded-2xl overflow-hidden bg-zinc-200 dark:bg-zinc-800">
+                                <div className="w-16 h-16 rounded-[20px] overflow-hidden"
+                                    style={{
+                                        boxShadow: '0 4px 12px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.2)'
+                                    }}>
+                                    <div className="w-full h-full bg-zinc-200 dark:bg-zinc-800">
                                         {myStatus?.media_url ? (
                                             <img src={myStatus.media_url} className="w-full h-full object-cover" />
                                         ) : (
@@ -69,7 +94,10 @@ export const Status = () => {
                                     </div>
                                 </div>
                                 {!myStatus && (
-                                    <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-500 rounded-full border-2 border-white dark:border-[var(--card)] flex items-center justify-center text-white">
+                                    <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-tertiary)] rounded-full border-2 border-white dark:border-[var(--clay-surface)] flex items-center justify-center text-white"
+                                        style={{
+                                            boxShadow: '0 2px 8px rgba(107,138,255,0.4)'
+                                        }}>
                                         <Plus size={14} strokeWidth={3} />
                                     </div>
                                 )}
@@ -81,7 +109,11 @@ export const Status = () => {
                                 </p>
                             </div>
                             {myStatus && (
-                                <div className="flex items-center text-zinc-400 text-xs font-medium bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded-full">
+                                <div className="flex items-center text-zinc-400 text-xs font-medium px-3 py-1.5 rounded-full"
+                                    style={{
+                                        background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%)',
+                                        boxShadow: '0 2px 6px rgba(34, 197, 94, 0.1), inset 0 1px 0 rgba(255,255,255,0.2)'
+                                    }}>
                                     <div className="w-2 h-2 rounded-full bg-green-500 mr-2 animate-pulse" />
                                     Active
                                 </div>
@@ -106,8 +138,19 @@ export const Status = () => {
                                     <div
                                         key={status.id}
                                         onClick={() => navigate(`/status/${status.user_id}`)}
-                                        className="group relative aspect-[9/16] rounded-3xl overflow-hidden cursor-pointer hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 animate-scale-in"
-                                        style={{ animationDelay: `${i * 100}ms` }}
+                                        className="group relative aspect-[9/16] rounded-[24px] overflow-hidden cursor-pointer transition-all duration-300 animate-scale-in active:scale-95"
+                                        style={{
+                                            animationDelay: `${i * 100}ms`,
+                                            boxShadow: '0 -2px 8px rgba(255,255,255,0.4), 0 6px 16px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.2)'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(-4px)'
+                                            e.currentTarget.style.boxShadow = '0 -3px 12px rgba(255,255,255,0.5), 0 12px 28px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.25)'
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(0)'
+                                            e.currentTarget.style.boxShadow = '0 -2px 8px rgba(255,255,255,0.4), 0 6px 16px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.2)'
+                                        }}
                                     >
                                         <div className="absolute inset-0 bg-zinc-200 dark:bg-zinc-800">
                                             {status.media_url ? (

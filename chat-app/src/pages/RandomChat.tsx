@@ -558,7 +558,11 @@ export const RandomChat = () => {
                 {/* IDLE */}
                 {status === 'idle' && (
                     <div className="text-center max-w-sm">
-                        <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl shadow-blue-500/20">
+                        <div className="w-24 h-24 rounded-[28px] flex items-center justify-center mx-auto mb-6"
+                            style={{
+                                background: 'linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-tertiary) 100%)',
+                                boxShadow: '0 -3px 12px rgba(255,255,255,0.25), 0 12px 28px rgba(107,138,255,0.35), inset 0 1px 0 rgba(255,255,255,0.3)'
+                            }}>
                             <RefreshCw size={40} className="text-white" />
                         </div>
                         <h2 className="text-2xl font-bold mb-3 dark:text-white">Meet Someone New</h2>
@@ -568,7 +572,19 @@ export const RandomChat = () => {
                         </p>
                         <button
                             onClick={startSearch}
-                            className="w-full bg-blue-600 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg hover:bg-blue-700 transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+                            className="w-full text-white px-8 py-4 rounded-full font-semibold transition-all transform active:scale-95"
+                            style={{
+                                background: 'linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-tertiary) 100%)',
+                                boxShadow: '0 -2px 8px rgba(255,255,255,0.2), 0 8px 20px rgba(107,138,255,0.35), inset 0 1px 0 rgba(255,255,255,0.25)'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)'
+                                e.currentTarget.style.boxShadow = '0 -3px 12px rgba(255,255,255,0.25), 0 12px 32px rgba(107,138,255,0.45), inset 0 1px 0 rgba(255,255,255,0.3)'
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'translateY(0) scale(1)'
+                                e.currentTarget.style.boxShadow = '0 -2px 8px rgba(255,255,255,0.2), 0 8px 20px rgba(107,138,255,0.35), inset 0 1px 0 rgba(255,255,255,0.25)'
+                            }}
                         >
                             Start Searching
                         </button>
@@ -598,8 +614,15 @@ export const RandomChat = () => {
 
                 {/* ENDED */}
                 {status === 'ended' && (
-                    <div className="text-center bg-white dark:bg-zinc-900 p-8 rounded-3xl shadow-xl max-w-sm w-full border border-zinc-100 dark:border-zinc-800 animate-scale-in">
-                        <div className="w-16 h-16 bg-zinc-100 dark:bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div className="text-center p-8 rounded-[28px] max-w-sm w-full border border-zinc-200/60 dark:border-zinc-700/50 bg-white dark:bg-[var(--clay-surface)] animate-scale-in"
+                        style={{
+                            boxShadow: '0 -2px 8px rgba(255,255,255,0.4), 0 8px 24px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.25)'
+                        }}>
+                        <div className="w-16 h-16 rounded-[20px] flex items-center justify-center mx-auto mb-4"
+                            style={{
+                                background: 'linear-gradient(135deg, rgba(107,138,255,0.08) 0%, rgba(96,213,196,0.06) 100%)',
+                                boxShadow: '0 2px 8px rgba(107,138,255,0.1), inset 0 1px 0 rgba(255,255,255,0.2)'
+                            }}>
                             <AlertCircle size={32} className="text-zinc-500" />
                         </div>
                         <h2 className="text-xl font-bold mb-2 dark:text-white">Chat Ended</h2>
@@ -612,14 +635,18 @@ export const RandomChat = () => {
                         ) : (
                             <button
                                 onClick={startSearch}
-                                className="w-full bg-blue-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-700 transition-all mb-3"
+                                className="w-full text-white px-6 py-3 rounded-full font-medium transition-all mb-3"
+                                style={{
+                                    background: 'linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-tertiary) 100%)',
+                                    boxShadow: '0 4px 12px rgba(107,138,255,0.25), inset 0 1px 0 rgba(255,255,255,0.25)'
+                                }}
                             >
                                 Find New Partner
                             </button>
                         )}
                         <button
                             onClick={() => navigate('/search')}
-                            className="w-full bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 px-6 py-3 rounded-xl font-medium hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all"
+                            className="w-full bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 px-6 py-3 rounded-full font-medium hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all"
                         >
                             Go Back
                         </button>
@@ -670,7 +697,11 @@ export const RandomChat = () => {
                         <button
                             type="submit"
                             disabled={!input.trim() || status !== 'connected'}
-                            className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 disabled:opacity-50 disabled:transform-none transition-all transform hover:scale-105 shadow-lg shadow-blue-600/20"
+                            className="w-12 h-12 text-white rounded-full flex items-center justify-center disabled:opacity-50 disabled:transform-none transition-all transform hover:scale-105"
+                            style={{
+                                background: 'linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-tertiary) 100%)',
+                                boxShadow: '0 4px 12px rgba(107,138,255,0.3), inset 0 1px 0 rgba(255,255,255,0.25)'
+                            }}
                         >
                             <Send size={20} className="ml-0.5" />
                         </button>

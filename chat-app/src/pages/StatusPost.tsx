@@ -61,11 +61,14 @@ export const StatusPost = () => {
             <div className="flex flex-col h-[100dvh] bg-black text-white items-center justify-center p-4">
                 <div className="text-center">
                     <h2 className="text-xl font-bold mb-4">Select an image</h2>
-                    <label className="bg-blue-600 px-6 py-3 rounded-xl cursor-pointer hover:bg-blue-700 transition active:scale-95">
+                    <label className="px-8 py-3.5 rounded-full cursor-pointer transition-all active:scale-95 inline-block bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-tertiary)] text-white font-semibold"
+                        style={{
+                            boxShadow: '0 -2px 8px rgba(255,255,255,0.2), 0 6px 16px rgba(107,138,255,0.3), inset 0 1px 0 rgba(255,255,255,0.25)'
+                        }}>
                         Choose from Gallery
                         <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
                     </label>
-                    <button onClick={() => navigate(-1)} className="block mt-8 text-zinc-500 hover:text-white px-4 py-2">Cancel</button>
+                    <button onClick={() => navigate(-1)} className="block mt-8 text-zinc-500 hover:text-white px-4 py-2 mx-auto">Cancel</button>
                 </div>
             </div>
         )

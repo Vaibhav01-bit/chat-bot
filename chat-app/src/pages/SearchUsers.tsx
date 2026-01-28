@@ -82,12 +82,12 @@ export const SearchUsers = () => {
     }
 
     return (
-        <div className="flex flex-col h-[100dvh] bg-white dark:bg-zinc-950">
-            <div className="px-4 pt-4 pb-2 border-b border-zinc-100 dark:border-zinc-900 sticky top-0 bg-white dark:bg-zinc-950 z-10">
+        <div className="flex flex-col h-[100dvh] bg-[var(--background)]">
+            <div className="px-4 pt-4 pb-2 border-b border-zinc-200/60 dark:border-zinc-700/50 sticky top-0 bg-white/90 dark:bg-[var(--clay-surface)]/90 backdrop-blur-xl z-10">
                 <div className="flex items-center gap-3 mb-4">
                     <button
                         onClick={() => navigate(-1)}
-                        className="p-2 -ml-2 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-full transition-colors"
+                        className="p-2 -ml-2 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 rounded-full transition-colors"
                     >
                         <ArrowLeft className="w-6 h-6 text-zinc-900 dark:text-white" />
                     </button>
@@ -97,7 +97,7 @@ export const SearchUsers = () => {
                     placeholder="Search users by username..."
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    className="bg-zinc-100 dark:bg-zinc-900 border-transparent dark:border-zinc-800"
+                    className="bg-white dark:bg-[var(--clay-elevated)] border-zinc-200 dark:border-zinc-700"
                     autoFocus
                 />
             </div>
@@ -128,9 +128,20 @@ export const SearchUsers = () => {
                         </div>
                     ) : (
                         users.map(u => (
-                            <div key={u.id} className="flex items-center justify-between p-3 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-100 dark:border-zinc-800/50 rounded-2xl hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors group">
+                            <div key={u.id} className="flex items-center justify-between p-4 rounded-[20px] border border-zinc-200/60 dark:border-zinc-700/50 bg-white dark:bg-[var(--clay-surface)] transition-all duration-200 group active:scale-[0.98]"
+                                style={{
+                                    boxShadow: '0 -2px 8px rgba(255,255,255,0.4), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.25)'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(-2px)'
+                                    e.currentTarget.style.boxShadow = '0 -3px 12px rgba(255,255,255,0.5), 0 8px 20px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.3)'
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(0)'
+                                    e.currentTarget.style.boxShadow = '0 -2px 8px rgba(255,255,255,0.4), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.25)'
+                                }}>
                                 <div className="flex items-center space-x-3.5 cursor-pointer flex-1" onClick={() => navigate(`/profile/${u.id}`)}>
-                                    <div className="w-12 h-12 rounded-full bg-zinc-200 dark:bg-zinc-700 overflow-hidden ring-2 ring-white dark:ring-zinc-900 shadow-sm">
+                                    <div className="w-12 h-12 rounded-full bg-zinc-200 dark:bg-zinc-700 overflow-hidden ring-2 ring-white dark:ring-[var(--clay-surface)] shadow-sm">
                                         {u.avatar_url ? <img src={u.avatar_url} className="w-full h-full object-cover transition-transform group-hover:scale-105" /> : null}
                                     </div>
                                     <div>
@@ -142,7 +153,7 @@ export const SearchUsers = () => {
                                 <div className="flex gap-2">
                                     <button
                                         onClick={() => handleAddFriend(u.id)}
-                                        className="p-3 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 rounded-xl hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all active:scale-95"
+                                        className="p-3 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 rounded-[14px] hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all active:scale-95"
                                         title="Add Friend"
                                     >
                                         <UserPlus size={20} className="stroke-[2.5px]" />
@@ -150,8 +161,12 @@ export const SearchUsers = () => {
                                     <button
                                         onClick={() => handleMessage(u.id)}
                                         disabled={actionLoading === u.id}
-                                        className="p-3 bg-blue-100 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-xl hover:bg-blue-200 dark:hover:bg-blue-500/20 transition-all active:scale-95 disabled:opacity-50 disabled:scale-100"
+                                        className="p-3 text-white rounded-[14px] transition-all active:scale-95 disabled:opacity-50 disabled:scale-100"
                                         title="Send Message"
+                                        style={{
+                                            background: 'linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-tertiary) 100%)',
+                                            boxShadow: '0 4px 12px rgba(107,138,255,0.25), inset 0 1px 0 rgba(255,255,255,0.3)'
+                                        }}
                                     >
                                         {actionLoading === u.id ? (
                                             <div className="animate-spin h-5 w-5 border-2 border-current border-t-transparent rounded-full" />

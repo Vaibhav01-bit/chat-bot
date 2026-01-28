@@ -3,7 +3,6 @@
 :root {
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   line-height: 1.5;
-  line-height: 1.5;
   font-weight: 400;
 
   /* Dynamic Style Variables */
@@ -17,47 +16,122 @@
   /* Apply Dynamic Font */
   font-family: var(--font-family-base);
 
-  color-scheme: light;
-  --background: #ffffff;
-  --foreground: #09090b;
-
+  /* Safe Area Insets */
   --sat: env(safe-area-inset-top);
   --sab: env(safe-area-inset-bottom);
   --sal: env(safe-area-inset-left);
   --sar: env(safe-area-inset-right);
 
-  /* Chat Specific Variables - Light Mode Defaults */
-  --chat-bg-gradient-start: #f8f9fa;
-  --chat-bg-gradient-end: #ffffff;
-  --msg-in-bg: #eef1f6;
-  --msg-in-text: #09090b;
-  --msg-out-bg-start: #3b82f6;
-  --msg-out-bg-end: #06b6d4;
-  --msg-out-text: #ffffff;
-  --input-bg: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(0, 0, 0, 0.05);
+  /* ========================================
+     CLAYMORPHIC DESIGN SYSTEM - LIGHT MODE
+     With Apple-Inspired Refinements
+     ======================================== */
+
+  color-scheme: light;
+
+  /* Clay Color Palette - Light (Apple-refined) */
+  --background: #FAFAFA;
+  /* Subtle background - not harsh pure white */
+  --foreground: #1D1D1F;
+  /* Apple's text color for clean hierarchy */
+  --clay-surface: #FFFFFF;
+  /* Pure white for cards */
+  --clay-elevated: #FFFFFF;
+  /* Elevated surfaces */
+  --clay-border: rgba(0, 0, 0, 0.06);
+
+  /* Accent Colors - iOS Blue + Soft Muted */
+  --accent-primary: #007AFF;
+  /* iOS blue - single accent where needed */
+  --accent-secondary: #A78BFA;
+  /* Soft purple (secondary) */
+  --accent-tertiary: #60D5C4;
+  /* Soft teal (tertiary) */
+
+  /* Clay Shadows - Refined (barely visible but create depth) */
+  --shadow-light: 0 -1px 3px rgba(255, 255, 255, 0.4);
+  --shadow-dark: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-clay: var(--shadow-light), var(--shadow-dark);
+  --shadow-clay-hover: 0 -2px 6px rgba(255, 255, 255, 0.5), 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-clay-pressed: inset 0 1px 4px rgba(0, 0, 0, 0.08), inset 0 -1px 2px rgba(255, 255, 255, 0.4);
+
+  /* Inner Highlights - Subtle */
+  --highlight-inner: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+
+  /* Border Radius System */
+  --radius-sm: 16px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --radius-pill: 9999px;
+
+  /* Chat Specific - Apple-refined */
+  --chat-bg-gradient-start: #FAFAFA;
+  --chat-bg-gradient-end: #FFFFFF;
+  --msg-in-bg: #F2F2F7;
+  /* Apple's light gray for incoming messages */
+  --msg-in-text: #1D1D1F;
+  /* Clean text hierarchy */
+  --msg-out-bg: #007AFF;
+  /* iOS blue for outgoing (single accent) */
+  --msg-out-text: #FFFFFF;
+  --input-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(0, 0, 0, 0.04);
+
+  /* Glow Effects - Subtle iOS blue */
+  --glow-accent: 0 0 0 4px rgba(0, 122, 255, 0.12);
+  --glow-ambient: rgba(0, 122, 255, 0.08);
 }
 
 @variant dark (&:where(.dark, .dark *));
 
 .dark {
-  color-scheme: dark;
-  --background: #0B0D12;
-  /* Deep dark background */
-  --foreground: #ededed;
-  --sidebar: #0F1117;
-  --card: #151821;
-  --card-hover: #1B1F2A;
+  /* ========================================
+     CLAYMORPHIC DESIGN SYSTEM - DARK MODE
+     ======================================== */
 
-  /* Chat Specific Variables - Dark Mode */
-  --chat-bg-gradient-start: #0E1118;
-  --chat-bg-gradient-end: #0B0D12;
-  --msg-in-bg: #1A1D26;
-  --msg-in-text: #ededed;
-  --input-bg: rgba(21, 24, 33, 0.7);
-  /* Glass effect base */
+  color-scheme: dark;
+
+  /* Clay Color Palette - Dark */
+  --background: #121418;
+  --foreground: #E8E9ED;
+  --clay-surface: #1A1D23;
+  --clay-elevated: #222633;
+  --clay-border: rgba(255, 255, 255, 0.08);
+
+  /* Accent Colors - Soft Neon */
+  --accent-primary: #7B9AFF;
+  --accent-secondary: #B89BFA;
+  --accent-tertiary: #70E5D4;
+
+  /* Clay Shadows - Dark */
+  --shadow-light: 0 -2px 8px rgba(255, 255, 255, 0.03);
+  --shadow-dark: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-clay: var(--shadow-light), var(--shadow-dark);
+  --shadow-clay-hover: 0 -3px 12px rgba(255, 255, 255, 0.05), 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-clay-pressed: inset 0 2px 6px rgba(0, 0, 0, 0.3), inset 0 -1px 2px rgba(255, 255, 255, 0.05);
+
+  /* Inner Highlights - Dark */
+  --highlight-inner: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+  /* Chat Specific - Dark */
+  --chat-bg-gradient-start: #121418;
+  --chat-bg-gradient-end: #1A1D23;
+  --msg-in-bg: #1A1D23;
+  --msg-in-text: #E8E9ED;
+  --msg-out-bg: linear-gradient(135deg, #7B9AFF 0%, #70E5D4 100%);
+  --msg-out-text: #FFFFFF;
+  --input-bg: rgba(34, 38, 51, 0.7);
   --glass-border: rgba(255, 255, 255, 0.08);
-  --accent-glow: rgba(59, 130, 246, 0.15);
+
+  /* Glow Effects - Dark */
+  --glow-accent: 0 0 0 4px rgba(123, 154, 255, 0.2);
+  --glow-ambient: rgba(123, 154, 255, 0.15);
+
+  /* Legacy Variables for Compatibility */
+  --sidebar: #1A1D23;
+  --card: #1A1D23;
+  --card-hover: #222633;
+  --accent-glow: rgba(123, 154, 255, 0.15);
 }
 
 body {
@@ -66,12 +140,41 @@ body {
   min-height: 100dvh;
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
-
   background-color: var(--background);
   color: var(--foreground);
 }
 
 @layer utilities {
+  /* ========================================
+     CLAY SURFACE UTILITIES
+     ======================================== */
+
+  .clay-surface {
+    background: var(--clay-surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-clay), var(--highlight-inner);
+    border: 1px solid var(--clay-border);
+  }
+
+  .clay-elevated {
+    background: var(--clay-elevated);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-clay), var(--highlight-inner);
+    border: 1px solid var(--clay-border);
+  }
+
+  .clay-pressed {
+    box-shadow: var(--shadow-clay-pressed);
+  }
+
+  .clay-glow {
+    box-shadow: var(--shadow-clay), var(--glow-accent);
+  }
+
+  /* ========================================
+     ANIMATION UTILITIES
+     ======================================== */
+
   .animate-fade-in {
     animation: fadeIn 0.2s ease-out forwards;
   }
@@ -96,10 +199,22 @@ body {
     animation: float 6s ease-in-out infinite;
   }
 
+  .animate-clay-lift {
+    animation: clayLift 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  .animate-clay-bounce {
+    animation: clayBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  .animate-clay-glow {
+    animation: clayGlow 2s ease-in-out infinite;
+  }
+
   .glass-panel {
     background: var(--input-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
   }
 
@@ -115,6 +230,10 @@ body {
     animation-delay: 300ms;
   }
 }
+
+/* ========================================
+   CLAY ANIMATION KEYFRAMES
+   ======================================== */
 
 @keyframes fadeIn {
   from {
@@ -182,44 +301,107 @@ body {
   }
 
   50% {
-    transform: translateY(-5px);
+    transform: translateY(-8px);
   }
 }
 
-/* Typing Indicator */
+@keyframes clayLift {
+  from {
+    transform: translateY(0);
+    box-shadow: var(--shadow-clay);
+  }
+
+  to {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-clay-hover);
+  }
+}
+
+@keyframes clayBounce {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(0.95);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes clayGlow {
+
+  0%,
+  100% {
+    box-shadow: var(--shadow-clay), 0 0 0 0 var(--glow-ambient);
+  }
+
+  50% {
+    box-shadow: var(--shadow-clay), 0 0 20px 4px var(--glow-ambient);
+  }
+}
+
+/* ========================================
+   TYPING INDICATOR - CLAY STYLE
+   ======================================== */
+
 .typing-indicator {
   display: inline-flex;
   align-items: center;
-  gap: 2px;
+  gap: 3px;
 }
 
 .typing-indicator span {
-  width: 4px;
-  height: 4px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background-color: currentColor;
-  animation: typingDot 1.4s infinite;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  animation: typingDotClay 1.2s ease-in-out infinite;
 }
 
 .typing-indicator span:nth-child(2) {
-  animation-delay: 0.2s;
+  animation-delay: 0.15s;
 }
 
 .typing-indicator span:nth-child(3) {
-  animation-delay: 0.4s;
+  animation-delay: 0.3s;
 }
 
-@keyframes typingDot {
+@keyframes typingDotClay {
 
   0%,
   60%,
   100% {
-    opacity: 0.3;
-    transform: translateY(0);
+    opacity: 0.4;
+    transform: translateY(0) scale(0.9);
   }
 
   30% {
     opacity: 1;
-    transform: translateY(-4px);
+    transform: translateY(-6px) scale(1.1);
+  }
+}
+
+/* ========================================
+   REDUCED MOTION SUPPORT
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .animate-float,
+  .animate-clay-glow,
+  .animate-pulse-ring {
+    animation: none !important;
   }
 }
