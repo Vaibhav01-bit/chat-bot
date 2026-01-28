@@ -1,4 +1,4 @@
-# ChatMate
+# Chatcat- 
 
 A modern chat app that actually feels good to use.
 
