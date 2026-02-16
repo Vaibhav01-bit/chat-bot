@@ -1,0 +1,456 @@
+﻿
+> chat-app@0.0.0 lint
+> eslint .
+
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\components\EmojiPicker.tsx
+  44:17  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\components\EmojiPicker.tsx:44:17
+  42 |         if (stored) {
+  43 |             try {
+> 44 |                 setRecentEmojis(JSON.parse(stored))
+     |                 ^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  45 |             } catch (e) {
+  46 |                 console.error('Failed to load recent emojis:', e)
+  47 |             }  react-hooks/set-state-in-effect
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\components\ImageCropper.tsx
+  16:64  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  27:52  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  27:76  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  33:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\components\MessageReactions.tsx
+  28:9  error    Error: Cannot access variable before it is declared
+
+`fetchReactions` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\components\MessageReactions.tsx:28:9
+  26 |
+  27 |     useEffect(() => {
+> 28 |         fetchReactions()
+     |         ^^^^^^^^^^^^^^ `fetchReactions` accessed before it is declared
+  29 |
+  30 |         // Real-time subscription
+  31 |         const channel = supabase
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\components\MessageReactions.tsx:66:5
+  64 |     }, [showPicker, onClose])
+  65 |
+> 66 |     const fetchReactions = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 67 |         const { data } = await supabase
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 68 |             .from('message_reactions')
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 69 |             .select('*')
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 70 |             .eq('message_id', messageId)
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 71 |
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 72 |         if (data) setReactions(data)
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 73 |     }
+     | ^^^^^^ `fetchReactions` is declared here
+  74 |
+  75 |     const toggleReaction = async (emoji: string) => {
+  76 |         if (!user) return  react-hooks/immutability
+  50:8  warning  React Hook useEffect has a missing dependency: 'fetchReactions'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          react-hooks/exhaustive-deps
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\components\PageTransition.tsx
+  15:13  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\components\PageTransition.tsx:15:13
+  13 |     useEffect(() => {
+  14 |         if (location !== displayLocation) {
+> 15 |             setTransitionStage('fadeOut')
+     |             ^^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  16 |         }
+  17 |     }, [location, displayLocation])
+  18 |  react-hooks/set-state-in-effect
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\components\ProtectedRoute.tsx
+  29:22  error  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\components\StatusReactions.tsx
+  17:48  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          @typescript-eslint/no-explicit-any
+  22:9   error    Error: Cannot access variable before it is declared
+
+`fetchReactions` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\components\StatusReactions.tsx:22:9
+  20 |
+  21 |     useEffect(() => {
+> 22 |         fetchReactions()
+     |         ^^^^^^^^^^^^^^ `fetchReactions` accessed before it is declared
+  23 |         fetchViews()
+  24 |         trackView()
+  25 |
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\components\StatusReactions.tsx:52:5
+  50 |     }, [statusId])
+  51 |
+> 52 |     const fetchReactions = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 53 |         const { data } = await supabase
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 54 |             .from('status_reactions')
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 55 |             .select('*')
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 56 |             .eq('status_id', statusId)
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 57 |
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 58 |         if (data) setReactions(data)
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 59 |     }
+     | ^^^^^^ `fetchReactions` is declared here
+  60 |
+  61 |     const fetchViews = async () => {
+  62 |         const { count } = await supabase                                                                                                                                                                     react-hooks/immutability
+  23:9   error    Error: Cannot access variable before it is declared
+
+`fetchViews` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\components\StatusReactions.tsx:23:9
+  21 |     useEffect(() => {
+  22 |         fetchReactions()
+> 23 |         fetchViews()
+     |         ^^^^^^^^^^ `fetchViews` accessed before it is declared
+  24 |         trackView()
+  25 |
+  26 |         // Real-time subscription
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\components\StatusReactions.tsx:61:5
+  59 |     }
+  60 |
+> 61 |     const fetchViews = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 62 |         const { count } = await supabase
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 63 |             .from('status_views')
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 64 |             .select('*', { count: 'exact', head: true })
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 65 |             .eq('status_id', statusId)
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 66 |
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 67 |         setViewCount(count || 0)
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 68 |     }
+     | ^^^^^^ `fetchViews` is declared here
+  69 |
+  70 |     const trackView = async () => {
+  71 |         if (!user || hasViewed) return                                                                                                                                            react-hooks/immutability
+  24:9   error    Error: Cannot access variable before it is declared
+
+`trackView` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\components\StatusReactions.tsx:24:9
+  22 |         fetchReactions()
+  23 |         fetchViews()
+> 24 |         trackView()
+     |         ^^^^^^^^^ `trackView` accessed before it is declared
+  25 |
+  26 |         // Real-time subscription
+  27 |         const channel = supabase
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\components\StatusReactions.tsx:70:5
+  68 |     }
+  69 |
+> 70 |     const trackView = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 71 |         if (!user || hasViewed) return
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 72 |
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 73 |         const { error } = await supabase
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 74 |             .from('status_views')
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 75 |             .insert({ status_id: statusId, user_id: user.id })
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 76 |             .select()
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 77 |
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 78 |         if (!error) setHasViewed(true)
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 79 |     }
+     | ^^^^^^ `trackView` is declared here
+  80 |
+  81 |     const toggleReaction = async (emoji: string) => {
+  82 |         if (!user) return  react-hooks/immutability
+  50:8   warning  React Hook useEffect has missing dependencies: 'fetchReactions', 'fetchViews', and 'trackView'. Either include them or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                react-hooks/exhaustive-deps
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\components\game\GameRoom.tsx
+   46:16  error    '_fen' is defined but never used                                                                                                        @typescript-eslint/no-unused-vars
+   48:16  error    '_move' is defined but never used                                                                                                       @typescript-eslint/no-unused-vars
+   48:23  error    Unexpected any. Specify a different type                                                                                                @typescript-eslint/no-explicit-any
+   58:8   warning  React Hook useEffect has missing dependencies: 'fetchGame' and 'subscribeToGame'. Either include them or remove the dependency array    react-hooks/exhaustive-deps
+  151:8   warning  React Hook useEffect has missing dependencies: 'handleClaimTimeout' and 'user?.id'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  188:21  error    Unexpected any. Specify a different type                                                                                                @typescript-eslint/no-explicit-any
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\context\AuthContext.tsx
+  48:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\context\ThemeContext.tsx
+   53:17  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\context\ThemeContext.tsx:53:17
+  51 |         if (saved) {
+  52 |             try {
+> 53 |                 setStyleSettings({ ...defaultStyleSettings, ...JSON.parse(saved) })
+     |                 ^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  54 |             } catch (e) {
+  55 |                 console.error('Failed to parse saved style settings', e)
+  56 |             }  react-hooks/set-state-in-effect
+  202:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react-refresh/only-export-components
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\context\ToastContext.tsx
+  19:20  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\context\ToastContext.tsx:19:20
+  17 |
+  18 |     const showToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
+> 19 |         const id = Math.random().toString(36).substr(2, 9)
+     |                    ^^^^^^^^^^^^^ Cannot call impure function
+  20 |         setToasts(prev => [...prev, { id, message, type }])
+  21 |         setTimeout(() => removeToast(id), 3000)
+  22 |     }  react-hooks/purity
+  46:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 react-refresh/only-export-components
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\hooks\useChats.ts
+   20:28  error    Unexpected any. Specify a different type                                                                       @typescript-eslint/no-explicit-any
+   74:39  error    Unexpected any. Specify a different type                                                                       @typescript-eslint/no-explicit-any
+  138:18  error    '_payload' is defined but never used                                                                           @typescript-eslint/no-unused-vars
+  152:8   warning  React Hook useEffect has a missing dependency: 'fetchChats'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\hooks\usePresence.ts
+   8:36  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-explicit-any
+  15:9   error    Error: Cannot access variable before it is declared
+
+`updateStatus` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\hooks\usePresence.ts:15:9
+  13 |
+  14 |         // 1. Initial Status Update
+> 15 |         updateStatus('online')
+     |         ^^^^^^^^^^^^ `updateStatus` accessed before it is declared
+  16 |
+  17 |         // 2. Realtime Presence Channel
+  18 |         const channel = supabase.channel('global_presence')
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\hooks\usePresence.ts:70:5
+  68 |     }, [user])
+  69 |
+> 70 |     const updateStatus = async (newStatus: 'online' | 'away' | 'offline') => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 71 |         if (!user) return
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 72 |         setStatus(newStatus)
+     ΓÇª
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 92 |         }
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 93 |     }
+     | ^^^^^^ `updateStatus` is declared here
+  94 |
+  95 |     return { status }
+  96 | }  react-hooks/immutability
+  68:8   warning  React Hook useEffect has a missing dependency: 'updateStatus'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react-hooks/exhaustive-deps
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\hooks\useStreaks.ts
+  18:9  error    Error: Cannot access variable before it is declared
+
+`fetchStreak` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\hooks\useStreaks.ts:18:9
+  16 |     useEffect(() => {
+  17 |         if (!user) return
+> 18 |         fetchStreak()
+     |         ^^^^^^^^^^^ `fetchStreak` accessed before it is declared
+  19 |     }, [user])
+  20 |
+  21 |     const fetchStreak = async () => {
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\hooks\useStreaks.ts:21:5
+  19 |     }, [user])
+  20 |
+> 21 |     const fetchStreak = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 22 |         if (!user) return
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |
+     ΓÇª
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 31 |         setLoading(false)
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 32 |     }
+     | ^^^^^^ `fetchStreak` is declared here
+  33 |
+  34 |     const updateStreak = async () => {
+  35 |         if (!user) return  react-hooks/immutability
+  19:8  warning  React Hook useEffect has a missing dependency: 'fetchStreak'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       react-hooks/exhaustive-deps
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\layouts\AdminLayout.tsx
+  18:17  error  Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\layouts\AdminLayout.tsx:18:17
+  16 |
+  17 |             const data = JSON.parse(session)
+> 18 |             if (Date.now() > data.expiresAt) {
+     |                 ^^^^^^^^^^ Cannot call impure function
+  19 |                 localStorage.removeItem('admin_session')
+  20 |                 localStorage.removeItem('admin_token')
+  21 |                 localStorage.removeItem('admin_role')  react-hooks/purity
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\pages\Chat.tsx
+   29:28  error    Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+   44:39  error    Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+   90:8   warning  React Hook useEffect has a missing dependency: 'setupPresence'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  129:18  error    'err' is defined but never used                                                                                   @typescript-eslint/no-unused-vars
+  141:22  error    'err' is defined but never used                                                                                   @typescript-eslint/no-unused-vars
+  158:32  error    Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+  159:22  error    Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+  207:23  error    Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+  245:23  error    Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\pages\FriendRequests.tsx
+  38:9  error    Error: Cannot access variable before it is declared
+
+`fetchRequests` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\pages\FriendRequests.tsx:38:9
+  36 |     useEffect(() => {
+  37 |         if (!user) return
+> 38 |         fetchRequests()
+     |         ^^^^^^^^^^^^^ `fetchRequests` accessed before it is declared
+  39 |
+  40 |         // Real-time subscription
+  41 |         const channel = supabase
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\pages\FriendRequests.tsx:66:5
+  64 |     }, [user])
+  65 |
+> 66 |     const fetchRequests = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 67 |         if (!user) return
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 68 |
+     ΓÇª
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 87 |         setLoading(false)
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 88 |     }
+     | ^^^^^^ `fetchRequests` is declared here
+  89 |
+  90 |     const handleAccept = async (requestId: string, senderId: string) => {
+  91 |         if (!user) return  react-hooks/immutability
+  64:8  warning  React Hook useEffect has a missing dependency: 'fetchRequests'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react-hooks/exhaustive-deps
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\pages\ProfileEdit.tsx
+  107:25  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\pages\ProfileView.tsx
+  11:44  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\pages\RandomChat.tsx
+   18:58  error    Unexpected any. Specify a different type                                                                                      @typescript-eslint/no-explicit-any
+   19:46  error    Unexpected any. Specify a different type                                                                                      @typescript-eslint/no-explicit-any
+   29:36  error    Unexpected any. Specify a different type                                                                                      @typescript-eslint/no-explicit-any
+   30:38  error    Unexpected any. Specify a different type                                                                                      @typescript-eslint/no-explicit-any
+   40:8   warning  React Hook useEffect has missing dependencies: 'leaveQueue' and 'status'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+   77:36  error    Unexpected any. Specify a different type                                                                                      @typescript-eslint/no-explicit-any
+  114:20  error    Unexpected any. Specify a different type                                                                                      @typescript-eslint/no-explicit-any
+  127:8   warning  React Hook useEffect has a missing dependency: 'handleTimeout'. Either include it or remove the dependency array              react-hooks/exhaustive-deps
+  253:23  error    Unexpected any. Specify a different type                                                                                      @typescript-eslint/no-explicit-any
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\pages\SearchUsers.tsx
+  17:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  79:23  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\pages\Status.tsx
+  11:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\pages\StatusView.tsx
+  10:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\pages\ThemeSettings.tsx
+  10:69  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\pages\admin\AdminDashboard.tsx
+  114:61  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\pages\admin\AdminDebug.tsx
+  45:23  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-explicit-any
+  52:9   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\pages\admin\AdminDebug.tsx:52:9
+  50 |
+  51 |     useEffect(() => {
+> 52 |         runDiagnostics()
+     |         ^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  53 |     }, [])
+  54 |
+  55 |     return (  react-hooks/set-state-in-effect
+  53:8   warning  React Hook useEffect has a missing dependency: 'runDiagnostics'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             react-hooks/exhaustive-deps
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\pages\admin\AdminLogin.tsx
+  56:23  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\pages\admin\AdminSettings.tsx
+  18:62  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\pages\admin\AdminStatuses.tsx
+  6:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\pages\admin\AdminUsers.tsx
+  6:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\src\utils\sanitize.ts
+  38:20  error  Unnecessary escape character: \/  no-useless-escape
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\supabase\functions\admin-auth\index.ts
+  2:1   error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  3:21  error  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  5:1   error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  7:1   error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+
+C:\Users\vi180\OneDrive\Desktop\ai porject\chat-app\supabase\functions\game-engine\index.ts
+  144:22  error  'e' is defined but never used  @typescript-eslint/no-unused-vars
+
+Γ£û 76 problems (64 errors, 12 warnings)
+

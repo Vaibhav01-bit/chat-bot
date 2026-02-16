@@ -134,6 +134,10 @@
   --accent-glow: rgba(123, 154, 255, 0.15);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   min-width: 320px;

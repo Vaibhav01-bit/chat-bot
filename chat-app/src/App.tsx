@@ -8,6 +8,7 @@ import { ToastProvider } from './context/ToastContext'
 import { PresenceManager } from './components/PresenceManager'
 
 // Lazy load all route components for code splitting
+const Landing = lazy(() => import('./pages/Landing').then(m => ({ default: m.Landing })))
 const MainLayout = lazy(() => import('./layouts/MainLayout').then(m => ({ default: m.MainLayout })))
 const Login = lazy(() => import('./pages/Login').then(m => ({ default: m.Login })))
 const Signup = lazy(() => import('./pages/Signup').then(m => ({ default: m.Signup })))
@@ -68,6 +69,8 @@ function App() {
           <ErrorBoundary>
             <Suspense fallback={<PageLoader />}>
               <Routes>
+                {/* Public routes */}
+                <Route path="/" element={<Landing />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
 
@@ -76,7 +79,7 @@ function App() {
                 </Route>
 
                 <Route element={<ProtectedRoute requireUsername={true} />}>
-                  <Route path="/" element={<MainLayout><Home /></MainLayout>} />
+                  <Route path="/chat" element={<MainLayout><Home /></MainLayout>} />
                   <Route path="/search" element={<SearchUsers />} />
                   <Route path="/random" element={<RandomChat />} />
                   <Route path="/status" element={<MainLayout><Status /></MainLayout>} />
