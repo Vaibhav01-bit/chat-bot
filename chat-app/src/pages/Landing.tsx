@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { Zap, Shield, Brain, ArrowRight, Check, Sparkles, Rocket, Gamepad2, Shuffle } from 'lucide-react'
+import { Shield, Brain, ArrowRight, Check, Sparkles, Rocket, Gamepad2, Shuffle } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 export function Landing() {
