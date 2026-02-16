@@ -1,17 +1,27 @@
-import { Navigate, Outlet } from 'react-router-dom'
+import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useEffect, useState } from 'react'
 import { supabase } from '../services/supabaseClient'
 
 export const ProtectedRoute = ({ requireUsername = true }: { requireUsername?: boolean }) => {
+    const location = useLocation()
     const { user, loading } = useAuth()
     const [checkingProfile, setCheckingProfile] = useState(true)
     const [hasUsername, setHasUsername] = useState(false)
 
     useEffect(() => {
         if (loading) return
+
         if (!user) {
-            setCheckingProfile(false)
+            // Check for OAuth callback params used by Supabase handles
+            const isAuthCallback = location.hash.includes('access_token') ||
+                location.search.includes('code') ||
+                location.search.includes('error_description')
+
+            // If we are in an auth callback, don't redirect yet - wait for Supabase to process it
+            if (!isAuthCallback) {
+                setCheckingProfile(false)
+            }
             return
         }
 
@@ -35,7 +45,7 @@ export const ProtectedRoute = ({ requireUsername = true }: { requireUsername?: b
 
         checkProfile()
 
-    }, [user, loading])
+    }, [user, loading, location])
 
     if (loading || checkingProfile) return (
         <div className="h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
