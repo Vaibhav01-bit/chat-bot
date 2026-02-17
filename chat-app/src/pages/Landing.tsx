@@ -34,13 +34,13 @@ export function Landing() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-950 via-purple-950/20 to-gray-950 text-white overflow-hidden relative">
+        <div className="min-h-screen bg-slate-900 text-white overflow-hidden relative">
             {/* Animated Background Particles */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 {[...Array(50)].map((_, i) => (
                     <div
                         key={i}
-                        className="absolute w-1 h-1 bg-blue-400/30 rounded-full animate-float"
+                        className="absolute w-1 h-1 bg-indigo-400/30 rounded-full animate-float"
                         style={{
                             left: `${Math.random() * 100}%`,
                             top: `${Math.random() * 100}%`,
@@ -52,7 +52,7 @@ export function Landing() {
             </div>
 
             {/* Navbar with 3D effect */}
-            <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-gray-900/50 border-b border-gray-800/50">
+            <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-slate-900/80 border-b border-indigo-500/10">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between h-16">
                         {/* Logo with 3D hover */}
@@ -104,7 +104,7 @@ export function Landing() {
             <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 relative">
                 {/* Floating orbs */}
                 <div
-                    className="absolute top-20 left-10 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl animate-pulse"
+                    className="absolute top-20 left-10 w-72 h-72 bg-indigo-500/20 rounded-full blur-3xl animate-pulse"
                     style={{ transform: `translate(${mousePosition.x}px, ${mousePosition.y}px)` }}
                 />
                 <div
@@ -119,9 +119,9 @@ export function Landing() {
                     <div className="grid lg:grid-cols-2 gap-12 items-center">
                         {/* Left Content */}
                         <div className="text-center lg:text-left">
-                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 border border-blue-500/20 mb-6 animate-pulse">
+                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 mb-6 animate-pulse">
                                 <Sparkles className="w-4 h-4 text-blue-400 animate-spin" style={{ animationDuration: '3s' }} />
-                                <span className="text-sm bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300 bg-clip-text text-transparent font-semibold">
+                                <span className="text-sm text-indigo-300 font-semibold">
                                     Play Chess with Friends
                                 </span>
                                 <Gamepad2 className="w-4 h-4 text-pink-400" />
@@ -130,12 +130,11 @@ export function Landing() {
                             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate-slide-up">
                                 Connect, Chat
                                 <br />
-                                <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-gradient">
-                                    & Play Games
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 animate-gradient">
                                 </span>
                             </h1>
 
-                            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto lg:mx-0 animate-fade-in">
+                            <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto lg:mx-0 animate-fade-in">
                                 Experience real-time messaging with built-in games. Challenge friends to chess while you chat, all in one beautiful interface.
                             </p>
 
@@ -143,18 +142,18 @@ export function Landing() {
                             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                                 <button
                                     onClick={() => navigate('/signup')}
-                                    className="group px-8 py-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-xl font-semibold text-lg hover:shadow-2xl hover:shadow-purple-500/50 hover:scale-105 transform transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden"
+                                    className="group px-8 py-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-xl font-semibold text-lg hover:shadow-2xl hover:shadow-indigo-500/50 hover:scale-105 transform transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden"
                                 >
                                     <span className="relative z-10 flex items-center gap-2">
                                         <Rocket className="w-5 h-5" />
                                         Get Started Free
                                         <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                                     </span>
-                                    <div className="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                    <div className="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                                 </button>
                                 <button
                                     onClick={() => navigate('/login')}
-                                    className="px-8 py-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl font-semibold text-lg hover:bg-white/10 hover:scale-105 hover:border-purple-500/50 transform transition-all duration-300"
+                                    className="px-8 py-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl font-semibold text-lg hover:bg-white/10 hover:scale-105 hover:border-indigo-500/50 transform transition-all duration-300"
                                 >
                                     Sign In
                                 </button>
@@ -170,7 +169,7 @@ export function Landing() {
                                 }}
                             >
                                 {/* Glow Effect */}
-                                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-pink-500/30 blur-3xl rounded-full animate-pulse" />
+                                <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/30 via-purple-500/30 to-pink-500/30 blur-3xl rounded-full animate-pulse" />
 
                                 {/* Chat Preview Card */}
                                 <div className="relative backdrop-blur-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20 rounded-2xl p-6 shadow-2xl">
@@ -217,7 +216,7 @@ export function Landing() {
                         <h2 className="text-4xl sm:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                             Powerful Features
                         </h2>
-                        <p className="text-xl text-gray-300">
+                        <p className="text-xl text-slate-300">
                             Everything you need for intelligent conversations
                         </p>
                     </div>
@@ -231,11 +230,11 @@ export function Landing() {
                                 desc: 'Challenge friends to a game of Chess directly within your chat conversations',
                                 delay: '0s',
                                 styles: {
-                                    border: 'hover:border-blue-500/50',
-                                    shadow: 'hover:shadow-blue-500/20',
-                                    iconBg: 'from-blue-500 to-blue-600',
-                                    iconShadow: 'group-hover:shadow-blue-500/50',
-                                    text: 'group-hover:text-blue-400'
+                                    border: 'hover:border-indigo-500/50',
+                                    shadow: 'hover:shadow-indigo-500/20',
+                                    iconBg: 'from-indigo-500 to-indigo-600',
+                                    iconShadow: 'group-hover:shadow-indigo-500/50',
+                                    text: 'group-hover:text-indigo-400'
                                 }
                             },
                             {
@@ -280,14 +279,14 @@ export function Landing() {
                         ].map((feature, idx) => (
                             <div
                                 key={idx}
-                                className={`group backdrop-blur-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/15 ${feature.styles.border} transition-all duration-300 transform hover:scale-105 hover:-translate-y-2 hover:shadow-2xl ${feature.styles.shadow}`}
+                                className={`group backdrop-blur-xl bg-slate-800/40 border border-slate-700/50 rounded-2xl p-6 hover:bg-slate-800/60 ${feature.styles.border} transition-all duration-300 transform hover:scale-105 hover:-translate-y-2 hover:shadow-2xl ${feature.styles.shadow}`}
                                 style={{ animationDelay: feature.delay }}
                             >
                                 <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.styles.iconBg} flex items-center justify-center mb-4 group-hover:shadow-lg ${feature.styles.iconShadow} group-hover:scale-110 group-hover:rotate-6 transition-all duration-300`}>
                                     <feature.icon className="w-6 h-6" />
                                 </div>
                                 <h3 className={`text-xl font-semibold mb-2 ${feature.styles.text} transition-colors`}>{feature.title}</h3>
-                                <p className="text-gray-400 group-hover:text-gray-300 transition-colors">
+                                <p className="text-slate-400 group-hover:text-slate-200 transition-colors">
                                     {feature.desc}
                                 </p>
                             </div>
@@ -297,13 +296,13 @@ export function Landing() {
             </section>
 
             {/* How It Works with Animated Steps */}
-            <section id="how-it-works" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-transparent via-purple-950/10 to-transparent relative">
+            <section id="how-it-works" className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-900 relative">
                 <div className="max-w-5xl mx-auto">
                     <div className="text-center mb-16">
                         <h2 className="text-4xl sm:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                             How It Works
                         </h2>
-                        <p className="text-xl text-gray-300">
+                        <p className="text-xl text-slate-300">
                             Get started in three simple steps
                         </p>
                     </div>
@@ -318,7 +317,7 @@ export function Landing() {
                                     gradient: 'from-blue-500 to-blue-600',
                                     shadow: 'shadow-blue-500/50',
                                     line: 'from-blue-500/50',
-                                    text: 'group-hover:text-blue-400'
+                                    text: 'group-hover:text-indigo-400'
                                 }
                             },
                             {
@@ -355,7 +354,7 @@ export function Landing() {
                                     )}
                                 </div>
                                 <h3 className={`text-xl font-semibold mb-3 ${step.styles.text} transition-colors`}>{step.title}</h3>
-                                <p className="text-gray-400 group-hover:text-gray-300 transition-colors">
+                                <p className="text-slate-400 group-hover:text-slate-300 transition-colors">
                                     {step.desc}
                                 </p>
                             </div>
@@ -371,7 +370,7 @@ export function Landing() {
                         <h2 className="text-4xl sm:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                             Beautiful Interface
                         </h2>
-                        <p className="text-xl text-gray-300">
+                        <p className="text-xl text-slate-300">
                             Designed for productivity and elegance
                         </p>
                     </div>
@@ -391,7 +390,7 @@ export function Landing() {
                         </div>
 
                         {/* Chat Messages */}
-                        <div className="p-6 space-y-4 min-h-[400px] bg-gradient-to-b from-transparent to-purple-950/5">
+                        <div className="p-6 space-y-4 min-h-[400px] bg-slate-900/50">
                             <div className="flex gap-3 animate-slide-up">
                                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex-shrink-0" />
                                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl rounded-tl-none p-4 max-w-md hover:bg-white/15 transition-colors">
@@ -434,7 +433,7 @@ export function Landing() {
                                 <input
                                     type="text"
                                     placeholder="Type your message..."
-                                    className="flex-1 bg-transparent outline-none text-gray-300 placeholder-gray-500"
+                                    className="flex-1 bg-transparent outline-none text-slate-200 placeholder-slate-500"
                                     disabled
                                 />
                                 <button className="px-4 py-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-lg text-sm font-medium hover:shadow-lg hover:shadow-purple-500/50 hover:scale-105 transition-all">
@@ -449,23 +448,23 @@ export function Landing() {
             {/* Final CTA with 3D Effect */}
             <section className="py-20 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-4xl mx-auto text-center">
-                    <div className="backdrop-blur-xl bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 border border-white/20 rounded-3xl p-12 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 transform">
+                    <div className="backdrop-blur-xl bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-pink-500/10 border border-indigo-500/20 rounded-3xl p-12 hover:scale-105 hover:shadow-2xl hover:shadow-indigo-500/30 transition-all duration-500 transform">
                         <h2 className="text-4xl sm:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                             Ready to start chatting?
                         </h2>
-                        <p className="text-xl text-gray-300 mb-8">
+                        <p className="text-xl text-slate-300 mb-8">
                             Join thousands of users already using ChatCat for smarter conversations
                         </p>
                         <button
                             onClick={() => navigate('/signup')}
-                            className="group px-10 py-5 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-xl font-semibold text-lg hover:shadow-2xl hover:shadow-purple-500/50 hover:scale-110 transform transition-all duration-300 inline-flex items-center gap-2 relative overflow-hidden"
+                            className="group px-10 py-5 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-xl font-semibold text-lg hover:shadow-2xl hover:shadow-indigo-500/50 hover:scale-110 transform transition-all duration-300 inline-flex items-center gap-2 relative overflow-hidden"
                         >
                             <span className="relative z-10 flex items-center gap-2">
                                 <Rocket className="w-5 h-5" />
                                 Create Free Account
                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                             </span>
-                            <div className="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            <div className="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         </button>
                     </div>
                 </div>
