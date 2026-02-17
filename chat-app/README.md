@@ -1,6 +1,6 @@
 # 🐱 ChatCat
 
-![ChatCat App Check](public/screenshot.png)
+![ChatCat App Check](public/Screenshot%202026-02-17%20141334.png)
 
 > **Modern AI-Powered Chat Application**  
 > Built with React, Vite, Supabase, and Tailwind CSS.
