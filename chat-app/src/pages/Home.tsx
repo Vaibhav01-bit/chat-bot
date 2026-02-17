@@ -21,10 +21,10 @@ export const Home = () => {
     return (
         <div className="flex flex-col h-full bg-[var(--background)]">
             <Helmet>
-                <title>ChatMate – Modern Real-Time Chat Platform</title>
-                <meta name="description" content="ChatMate is a modern real-time chat platform with private chat, random chat, statuses, and premium UI/UX. Connect with friends instantly through our secure messaging platform." />
-                <meta property="og:title" content="ChatMate – Modern Real-Time Chat Platform" />
-                <meta property="og:description" content="ChatMate is a modern real-time chat platform with private chat, random chat, statuses, and premium UI/UX." />
+                <title>ChatCat – Modern Real-Time Chat Platform</title>
+                <meta name="description" content="ChatCat is a modern real-time chat platform with private chat, random chat, statuses, and premium UI/UX. Connect with friends instantly through our secure messaging platform." />
+                <meta property="og:title" content="ChatCat – Modern Real-Time Chat Platform" />
+                <meta property="og:description" content="ChatCat is a modern real-time chat platform with private chat, random chat, statuses, and premium UI/UX." />
                 <meta property="og:type" content="website" />
                 <link rel="canonical" href="https://chatmate.vercel.app/" />
             </Helmet>
@@ -33,20 +33,20 @@ export const Home = () => {
             <div className="sr-only">
                 <h1>Modern Real-Time Chat Platform</h1>
                 <p>
-                    ChatMate is a cutting-edge real-time chat app designed for seamless communication.
+                    ChatCat is a cutting-edge real-time chat app designed for seamless communication.
                     Our messaging platform offers private chat, random chat with strangers, and engaging status updates.
                     Experience instant messaging with a premium user interface and advanced features.
                 </p>
                 <p>
                     Connect with friends through our secure chat app, discover new people with random chat,
-                    and share your moments with status updates. ChatMate combines the best of modern messaging
+                    and share your moments with status updates. ChatCat combines the best of modern messaging
                     with real-time synchronization and beautiful design.
                 </p>
             </div>
 
             <div className="p-4 border-b border-zinc-200/60 dark:border-zinc-700/50 sticky top-0 bg-white/90 dark:bg-[var(--clay-surface)]/90 backdrop-blur-xl z-10">
                 <div className="flex items-center justify-between mb-4">
-                    <h1 className="text-2xl font-bold bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-tertiary)] bg-clip-text text-transparent md:hidden">ChatMate</h1>
+                    <h1 className="text-2xl font-bold bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-tertiary)] bg-clip-text text-transparent md:hidden">ChatCat</h1>
                     {streak && streak.current_streak > 0 && (
                         <div className="flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-full text-sm font-semibold"
                             style={{

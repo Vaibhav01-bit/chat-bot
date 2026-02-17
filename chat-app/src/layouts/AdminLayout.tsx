@@ -58,7 +58,7 @@ export const AdminLayout = () => {
                 <div className="p-6 flex items-center space-x-3 border-b border-slate-800">
                     <Shield className="text-emerald-500" size={24} />
                     <div>
-                        <h1 className="font-bold text-lg tracking-tight">ChatMate Admin</h1>
+                        <h1 className="font-bold text-lg tracking-tight">ChatCat Admin</h1>
                         <span className="text-xs text-slate-500 font-mono">v2.1.0</span>
                     </div>
                 </div>

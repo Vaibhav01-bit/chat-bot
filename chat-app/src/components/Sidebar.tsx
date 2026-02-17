@@ -20,7 +20,7 @@ export function Sidebar() {
                 boxShadow: '0 0 40px rgba(0,0,0,0.06)'
             }}>
             <div className="p-6">
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-tertiary)] bg-clip-text text-transparent">ChatMate</h1>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-tertiary)] bg-clip-text text-transparent">ChatCat</h1>
             </div>
 
             <nav className="flex-1 px-4 space-y-2">

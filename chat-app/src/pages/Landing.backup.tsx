@@ -28,10 +28,10 @@ export function Landing() {
                         {/* Logo */}
                         <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center font-bold text-lg shadow-lg shadow-blue-500/50">
-                                CM
+                                CC
                             </div>
                             <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                                ChatMate
+                                ChatCat
                             </span>
                         </div>
 
@@ -128,7 +128,7 @@ export function Landing() {
                                         {/* Message 2 */}
                                         <div className="flex gap-3 justify-end">
                                             <div className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl rounded-tr-none p-4">
-                                                <p className="text-sm">Tell me about ChatMate features</p>
+                                                <p className="text-sm">Tell me about ChatCat features</p>
                                             </div>
                                             <div className="w-8 h-8 rounded-full bg-gray-600 flex-shrink-0"></div>
                                         </div>
@@ -354,7 +354,7 @@ export function Landing() {
                             Ready to start chatting?
                         </h2>
                         <p className="text-xl text-gray-400 mb-8">
-                            Join thousands of users already using ChatMate for smarter conversations
+                            Join thousands of users already using ChatCat for smarter conversations
                         </p>
                         <button
                             onClick={() => navigate('/signup')}
@@ -375,10 +375,10 @@ export function Landing() {
                         <div>
                             <div className="flex items-center gap-2 mb-4">
                                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center font-bold text-lg shadow-lg shadow-blue-500/50">
-                                    CM
+                                    CC
                                 </div>
                                 <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                                    ChatMate
+                                    ChatCat
                                 </span>
                             </div>
                             <p className="text-gray-400 text-sm">
@@ -438,7 +438,7 @@ export function Landing() {
 
                     {/* Copyright */}
                     <div className="pt-8 border-t border-white/10 text-center text-sm text-gray-400">
-                        <p>&copy; {new Date().getFullYear()} ChatMate. All rights reserved.</p>
+                        <p>&copy; {new Date().getFullYear()} ChatCat. All rights reserved.</p>
                     </div>
                 </div>
             </footer>

@@ -60,7 +60,7 @@ export const AuthLayout = ({ children }: { children: ReactNode }) => {
                         <div className="relative group cursor-pointer">
                             <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
                             <div className="relative h-16 w-16 bg-gray-900 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-xl ring-1 ring-white/10">
-                                <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">CM</span>
+                                <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">CC</span>
                             </div>
                         </div>
                     </div>
@@ -68,7 +68,7 @@ export const AuthLayout = ({ children }: { children: ReactNode }) => {
                 </div>
 
                 <div className="mt-8 text-center text-sm text-gray-500">
-                    <p>© 2024 ChatMate. Secure & Private.</p>
+                    <p>© 2024 ChatCat. Secure & Private.</p>
                 </div>
             </div>
         </div>

@@ -30,10 +30,10 @@ export function Footer() {
                             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                         >
                             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-lg shadow-lg shadow-purple-500/50 group-hover:scale-110 group-hover:rotate-6 transition-all">
-                                CM
+                                CC
                             </div>
                             <span className="text-xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                                ChatMate
+                                ChatCat
                             </span>
                         </div>
                         <p className="text-gray-400 text-sm">
@@ -93,7 +93,7 @@ export function Footer() {
 
                 {/* Copyright */}
                 <div className="pt-8 border-t border-white/10 text-center text-sm text-gray-400">
-                    <p>&copy; {new Date().getFullYear()} ChatMate. All rights reserved. Made with 💜 by Vaibhav Ingle</p>
+                    <p>&copy; {new Date().getFullYear()} ChatCat. All rights reserved. Made with 💜 by Vaibhav Ingle</p>
                 </div>
             </div>
         </footer>

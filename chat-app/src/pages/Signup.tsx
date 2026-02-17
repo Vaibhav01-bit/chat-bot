@@ -87,13 +87,13 @@ export const Signup = () => {
     return (
         <AuthLayout>
             <Helmet>
-                <title>Sign Up – ChatMate</title>
-                <meta name="description" content="Create your ChatMate account and start chatting with friends in real-time." />
+                <title>Sign Up – ChatCat</title>
+                <meta name="description" content="Create your ChatCat account and start chatting with friends in real-time." />
             </Helmet>
 
             <div className="text-center mb-8 animate-fade-in">
                 <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent tracking-tight">Create Account</h1>
-                <p className="text-gray-400 mt-2 text-sm font-medium">Join ChatMate today</p>
+                <p className="text-gray-400 mt-2 text-sm font-medium">Join ChatCat today</p>
             </div>
 
             <div className="space-y-6 animate-slide-up delay-100">

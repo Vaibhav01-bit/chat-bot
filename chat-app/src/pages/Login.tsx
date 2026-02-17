@@ -67,13 +67,13 @@ export const Login = () => {
         <AuthLayout>
             {/* ... (Helmet unchanged) */}
             <Helmet>
-                <title>Login – ChatMate</title>
-                <meta name="description" content="Sign in to ChatMate to access your chats, statuses, and connect with friends in real-time." />
+                <title>Login – ChatCat</title>
+                <meta name="description" content="Sign in to ChatCat to access your chats, statuses, and connect with friends in real-time." />
             </Helmet>
 
             <div className="text-center mb-6 animate-fade-in">
                 <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent tracking-tight">Welcome Back</h1>
-                <p className="text-gray-400 mt-2 text-sm font-medium">Sign in to continue to ChatMate</p>
+                <p className="text-gray-400 mt-2 text-sm font-medium">Sign in to continue to ChatCat</p>
             </div>
 
             <div className="space-y-6 animate-slide-up delay-100">

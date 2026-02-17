@@ -61,10 +61,10 @@ export function Landing() {
                             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                         >
                             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center font-bold text-lg shadow-lg shadow-blue-500/50 transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                                CM
+                                CC
                             </div>
                             <span className="text-xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                                ChatMate
+                                ChatCat
                             </span>
                         </div>
 
@@ -454,7 +454,7 @@ export function Landing() {
                             Ready to start chatting?
                         </h2>
                         <p className="text-xl text-gray-300 mb-8">
-                            Join thousands of users already using ChatMate for smarter conversations
+                            Join thousands of users already using ChatCat for smarter conversations
                         </p>
                         <button
                             onClick={() => navigate('/signup')}
